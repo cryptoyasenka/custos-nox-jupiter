@@ -49,7 +49,7 @@
 - **F1 (Week 3 update) ASSEMBLED** → `video-build/неделя 3/неделя 3.mp4` (25MB, ready to upload)
 - `video-build/неделя 3/неделя 3-Обложка.jpg` — thumbnail
 - **🚨 F1 UPLOAD DEADLINE: 2026-04-26 23:59 PDT** (tomorrow!)
-  - Upload to YouTube (unlisted) or Loom
+  - Upload to YouTube (unlisted)
   - Paste URL in Colosseum Arena → Week 3 update field
   - Post on @yasenka244 with X draft from `planning/video-week-3.md` section 7
 

@@ -1,6 +1,6 @@
 # F3 — Technical Demo Script (2–3 min, English)
 
-**Recording:** Loom, screen only (no face needed, or picture-in-picture).
+**Recording:** OBS Studio / Loom Desktop / Win+G Game Bar (local capture), screen only (no face needed, or PiP). Upload to YouTube **Unlisted** (same channel as F2 + F1 Week 3 video 2026-04-24).
 **Target:** 2:30–2:50. ~375–420 words.
 **Style:** "narrate what you're doing while you do it." No IDE tour, no code
 reading. Show the product running.
@@ -162,4 +162,5 @@ The code is at github.com/cryptoyasenka/custos-nox."
 - Pause 2–3 sec after each alert so viewers can read the output
 - Don't edit out the tx confirmation wait — it proves the chain is real
 - One take with natural pace is fine; cut silence at head/tail
-- Upload to Loom, paste URL in Arena submission field A11
+- Upload to YouTube as **Unlisted** (NOT Private — Private requires login). Title: `Custos Nox — F3 Tech Demo (Solana Frontier 2026)`. End screens / cards OFF.
+- **Verify URL works in incognito (no login)** before pasting in Arena submission field A11.

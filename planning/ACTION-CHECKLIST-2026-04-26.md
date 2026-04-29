@@ -13,7 +13,7 @@
 
 - [ ] **П2. Записать F2 pitch video (≤2 мин, English)** — до Apr 30
   Скрипт: `planning/PITCH-SCRIPT-F2.md` (7 слайдов, обновлённая версия без bold claim о 5 teams)
-  Запись: Loom face cam + slides → загрузить → URL в Arena
+  Запись: OBS / Loom Desktop / Win+G face cam + slides → upload на YouTube Unlisted → URL в Arena
 
 - [ ] **П3. Записать F3 tech demo (2-3 мин, English)** — до Apr 30
   Скрипт: `planning/TECH-DEMO-SCRIPT-F3.md`

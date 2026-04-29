@@ -126,6 +126,6 @@ Now ──┬─ Videos (F1, F2, F3) ──────┐
 1. **A5–A8** — draft Arena descriptions from README now (~30 min, no blockers, unblocks a lot when form is open in front of you)
 2. **C1** — hunt for Online Demo Day link in TG @KumekaTeam / @KumekaGroup (async, while drafting)
 3. **D2** — 5-min Discord channel rules check
-4. **F1** — Week 3 Loom (shortest video, warms up English delivery for F2/F3)
+4. **F1** — Week 3 video (uploaded to YouTube 2026-04-24 — DONE; shortest video, warmed up English delivery for F2/F3)
 5. **F2 + F3** — longer videos, needs dedicated recording block
 6. **A12 SUBMIT**, then B4 (Sidetrack) + D4 (final Discord post)

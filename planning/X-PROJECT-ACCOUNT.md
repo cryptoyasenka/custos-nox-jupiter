@@ -86,7 +86,7 @@ Week 3 — live devnet demo 🧵
 
 Three attack-chain steps. Three sub-second alerts. All on devnet.
 
-[attach: неделя 3.mp4 or YouTube link]
+[YouTube link to F1 Week 3 video, uploaded 2026-04-24]
 
 → github.com/cryptoyasenka/custos-nox
 #Solana #Colosseum #SolanaHackathon

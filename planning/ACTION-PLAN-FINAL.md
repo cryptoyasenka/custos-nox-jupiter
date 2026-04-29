@@ -489,7 +489,7 @@ GitHub: https://github.com/cryptoyasenka/custos-nox
 - ✅ Відповідай на genuine питання
 - ❌ Не тегай суддів (@max, @anatoly)
 - ❌ Не пости в #frontier-hackathon (вже постила GM 2026-04-23)
-- ❌ Не додавай Loom лінки якщо ніхто не питає
+- ❌ Не додавай YouTube лінки на pitch/demo якщо ніхто не питає (post = link to dashboard, не до видео)
 
 ### Якщо суддя відповів:
 - Не пітчуй у відповідь — answer the question and stop.

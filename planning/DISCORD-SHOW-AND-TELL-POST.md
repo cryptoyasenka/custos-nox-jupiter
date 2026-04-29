@@ -42,7 +42,7 @@ GitHub: https://github.com/cryptoyasenka/custos-nox
 - ✅ Reply to genuine questions. If someone asks "how does it differ from STRIDE?", point to the long-description in the Arena submission or the README.
 - ❌ Don't tag judges (@max, @anatoly, etc.) in the post itself — too aggressive.
 - ❌ Don't repost in #frontier-hackathon — that channel had the GM intro already (2026-04-23).
-- ❌ Don't link Loom videos here unless someone asks — keep the post tight.
+- ❌ Don't link the F2/F3 YouTube videos here unless someone asks — keep the post tight (link the dashboard, not the videos).
 
 ---
 
