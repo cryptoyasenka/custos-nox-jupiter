@@ -1,14 +1,27 @@
+<p align="center">
+  <img src="./assets/logo.png" alt="Custos Nox" height="80" />
+</p>
+
 # Custos Nox
 
 [![ci](https://github.com/cryptoyasenka/custos-nox/actions/workflows/ci.yml/badge.svg)](https://github.com/cryptoyasenka/custos-nox/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-205%20passing-brightgreen)](https://github.com/cryptoyasenka/custos-nox/actions/workflows/ci.yml)
 
 Open-source real-time monitor for Solana multisigs and DAOs. Detects the
 attack chain that drained $285M from Drift on April 1, 2026.
 
 **Live:** <https://custos-nox.up.railway.app>
 
-**Dashboard:** marketing site, detector catalog, and sample event feed
-live in [`dashboard/`](./dashboard) (Next.js 16, static build).
+**Demo site:** detector catalog and sample event feed in
+[`dashboard/`](./dashboard) (Next.js, static).
+
+## Status
+
+Pre-release, built for the Solana Frontier Hackathon
+(submission 2026-05-10 23:59 PDT). All five detectors are live and
+passing 205 tests. The devnet smoke harness in `scripts/` reproduces
+the full Drift attack chain end-to-end on-chain.
 
 ## What it catches
 
@@ -82,52 +95,31 @@ wallets. Self-host in five minutes. MIT licensed.
 - Per-detector 5s timeout; timeouts and throws emit a low-severity
   alert rather than silently disappearing.
 
-## Hardening notes (v0.3, 2026-04-26)
+## Code hardening
 
-A senior code review pass landed four reliability fixes between the
-v0.2 hackathon submission and the v0.3 polish. All four are now in
-`main`:
+A code review pass added four reliability improvements after the
+initial implementation, all on `main`:
 
-1. **WebSocket subscription cleanup on reconnect** (commit `0adf543`).
-   The supervisor captures subscription IDs from `onAccountChange` and
-   calls `removeAccountChangeListener` on both reconnect and shutdown,
-   instead of relying on `Connection` GC to close stale WebSocket
-   subscriptions. Prevents zombie callbacks after long sessions.
+1. **WebSocket subscription cleanup on reconnect.** The supervisor
+   captures subscription IDs from `onAccountChange` and calls
+   `removeAccountChangeListener` on both reconnect and shutdown,
+   preventing zombie callbacks after long sessions.
 
-2. **Live `txSignature` backfill** (commit `0adf543`).
-   `onAccountChange` doesn't include the triggering tx signature. The
-   supervisor now calls `getSignaturesForAddress` (limit 5,
-   slot-matched) when an alert fires, so Solscan links go to `/tx/`
-   instead of `/account/`. Backfill failures fall back to the
-   original null-signature alert — delivery is never blocked.
+2. **Live `txSignature` backfill.** `onAccountChange` does not include
+   the triggering transaction signature. The supervisor calls
+   `getSignaturesForAddress` (limit 5, slot-matched) when an alert
+   fires, so Solscan links resolve to `/tx/` instead of `/account/`.
+   Backfill failures fall back gracefully — delivery is never blocked.
 
-3. **Webhook delivery retry** (commit `0a442e3`).
-   Discord/Slack 429 + 5xx responses now trigger exponential backoff
-   (base 500 ms, capped at 60 s) with `Retry-After` honoring (Discord's
-   sub-second floats supported). 4xx other than 429 do not retry.
+3. **Webhook delivery retry.** Discord/Slack 429 and 5xx responses
+   trigger exponential backoff (base 500 ms, capped at 60 s) with
+   `Retry-After` honoring. 4xx other than 429 do not retry.
 
-4. **Stale-nonce in-memory state bound** (commit `25a0491`).
-   `StaleNonceExecutionDetector` prunes `firstSeenAt` entries older
-   than 2× threshold every 100 inspect calls, with a 10 000-entry hard
-   cap as a safety net.
+4. **Stale-nonce in-memory state bound.** `StaleNonceExecutionDetector`
+   prunes `firstSeenAt` entries older than 2× threshold every 100
+   inspect calls, with a 10 000-entry hard cap as a safety net.
 
-Test coverage grew from 147 to 205 across these changes (164 from
-the four hardening fixes above, plus 41 more from the
-`SignerSetChangeDetector` shipped alongside them).
-
-## Status
-
-Pre-release. Built for the Solana Frontier Hackathon
-(submission 2026-05-10 23:59 PDT). All five detectors are running live;
-devnet smoke harness in `scripts/` reproduces four steps end-to-end
-on-chain (timelock removal, multisig weakening, privileged-nonce init,
-and an adjacent signer-set rotation). The stale-nonce detector
-activates after the PrivilegedNonce init step — the same account is
-watched by both detectors simultaneously. The on-chain mutations have
-been verified live; whether the daemon's `onAccountChange` subscription
-actually fires for a given watched account depends on the RPC provider,
-since the public devnet RPC silently drops some account-change
-notifications (run `npm run check:null-subscribe` to verify yours).
+Test coverage grew from 147 to 205 across these changes.
 
 ## Quick start
 
