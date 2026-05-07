@@ -191,6 +191,58 @@ export default function Home() {
           </div>
         </section>
 
+        <section className="border-b border-border bg-surface/20">
+          <div className="mx-auto w-full max-w-5xl px-6 py-16">
+            <div className="mb-8 flex flex-col gap-3">
+              <h2 className="text-3xl font-semibold tracking-tight">How it works</h2>
+              <p className="max-w-2xl text-muted-strong">
+                A WebSocket daemon, five independent detectors, parallel alert fan-out.
+                Sub-second latency from on-chain change to alert in your team&apos;s channel.
+              </p>
+            </div>
+            <div className="flex flex-col items-center gap-0 font-mono text-sm">
+              <div className="rounded-lg border border-accent/40 bg-accent/5 px-6 py-3 text-center">
+                <div className="font-semibold text-foreground">Solana Chain</div>
+                <div className="mt-0.5 text-xs text-muted">account state changes</div>
+              </div>
+              <div className="flex h-8 flex-col items-center justify-center">
+                <div className="h-full w-px bg-border" />
+                <div className="font-mono text-[10px] uppercase tracking-wider text-muted">WebSocket · &lt;1s</div>
+                <div className="h-2 w-px bg-border" />
+              </div>
+              <div className="w-full max-w-lg rounded-lg border border-border bg-surface px-6 py-4 text-center">
+                <div className="font-semibold text-foreground">Custos Nox Daemon</div>
+                <div className="mt-3 grid grid-cols-5 gap-1">
+                  {["Timelock", "Weakening", "Priv. Nonce", "Stale Nonce", "Signer Set"].map((d) => (
+                    <div key={d} className="rounded bg-accent/10 px-1 py-1.5 text-center text-[10px] text-accent leading-tight">{d}</div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex h-8 flex-col items-center justify-center">
+                <div className="h-2 w-px bg-border" />
+                <div className="font-mono text-[10px] uppercase tracking-wider text-muted">parallel fan-out</div>
+                <div className="h-2 w-px bg-border" />
+              </div>
+              <div className="grid w-full max-w-lg grid-cols-4 gap-3">
+                {[
+                  { label: "Discord", sub: "embeds" },
+                  { label: "Slack", sub: "blocks" },
+                  { label: "Telegram", sub: "bot" },
+                  { label: "stdout", sub: "always on" },
+                ].map((sink) => (
+                  <div key={sink.label} className="rounded-lg border border-border bg-surface px-3 py-2.5 text-center">
+                    <div className="font-semibold text-foreground">{sink.label}</div>
+                    <div className="mt-0.5 text-[10px] text-muted">{sink.sub}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <p className="mt-6 text-center font-mono text-xs text-muted">
+              TypeScript · Solana web3.js · 215 tests · MIT · zero Rust
+            </p>
+          </div>
+        </section>
+
         <section id="timeline" className="border-b border-border">
           <div className="mx-auto w-full max-w-5xl px-6 py-20">
             <div className="mb-10 flex flex-col gap-3">
