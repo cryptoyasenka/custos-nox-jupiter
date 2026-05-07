@@ -4,6 +4,10 @@
 
 ---
 
+## STEP 1 — PROJECT INFO
+
+---
+
 ## TAGLINE (A5) — paste as-is
 
 Open-source attack detection for Solana multisigs and DAOs
@@ -13,6 +17,30 @@ Open-source attack detection for Solana multisigs and DAOs
 ## SHORT DESCRIPTION (A6, ≤280 chars — currently 224 ✓)
 
 Custos Nox monitors Solana multisigs and DAOs for attack-chain precursors in real time. 5 detectors covering every step of the April 2026 Drift exploit ($285M) plus adjacent vectors. Self-host in 5 min. MIT, no paid tiers.
+
+---
+
+## WHAT ARE YOU BUILDING, AND WHO IS IT FOR? (Step 1 field)
+
+Open-source TypeScript daemon that monitors Solana multisigs and DAOs for attack-chain precursors in real time. For protocol teams, DAOs, grant committees, and treasury multisig owners who fall below STRIDE's $10M+ TVL threshold and have no existing alerting.
+
+---
+
+## WHY DID YOU DECIDE TO BUILD THIS, AND WHY NOW? (Step 1 field)
+
+After the April 2026 Drift exploit I searched for a tool that would have caught the attack chain before the drain. Every step was visible on-chain for nine days and nothing flagged it. STRIDE covers roughly 50 protocols with $10M+ TVL. The other 10,000+ multisigs have nothing. I started building the next day.
+
+---
+
+## TECHNOLOGIES (Step 1 field)
+
+TypeScript, Node.js, @solana/web3.js, WebSocket (Solana RPC), Squads v4 program, SPL Governance program, System Program (nonce accounts), Vitest (215 tests), GitHub Actions CI, Docker, Railway.
+
+---
+
+## MOBILE-FOCUSED dApp? (Step 1 field)
+
+No
 
 ---
 
@@ -102,9 +130,37 @@ https://custos-nox.up.railway.app
 
 ---
 
+## STEP 2 — MEDIA AND CODE
+
+---
+
+## PROJECT LOGO (Step 2 field)
+
+File: assets/logo.png (1024×1024 square)
+
+---
+
 ## GITHUB REPO (A3)
 
 https://github.com/cryptoyasenka/custos-nox
+
+---
+
+## REPO CONTEXT (Step 2 field — "important context about your repo")
+
+TypeScript monorepo. src/detectors/ — 5 attack detectors, each with unit tests against real on-chain account state. src/alerts/ — Discord/Slack/Telegram/stdout sinks with parallel fan-out. scripts/ — devnet smoke harness that reproduces the Drift attack chain on-chain with real transactions. dashboard/ — Next.js public dashboard. 215 tests total, GitHub Actions CI on every push.
+
+---
+
+## LIVE PRODUCT LINK (Step 2 field)
+
+https://custos-nox.up.railway.app
+
+---
+
+## ACCESS INSTRUCTIONS (Step 2 field)
+
+No login required. Daemon is open-source and self-hosted; dashboard is public.
 
 ---
 
@@ -129,16 +185,69 @@ https://youtu.be/eX_Ze5lDLrc
 
 ---
 
+## STEP 3 — TEAM
+
+---
+
+## WHERE IS YOUR TEAM PRIMARILY BASED? (Step 3 field)
+
+Ukraine
+
+---
+
+## TEAM TELEGRAM CONTACT (Step 3 field)
+
+[Yana — paste your personal Telegram handle here before submitting]
+
+---
+
+## X PROFILE (Step 3 field)
+
+https://x.com/CustosNox
+
+---
+
+## ANYTHING ELSE JUDGES SHOULD KNOW? (Step 3 field — optional)
+
+The devnet smoke harness in scripts/ reproduces three steps of the Drift attack chain as real on-chain transactions. Each script fires a real tx; the daemon prints the alert within seconds. Judges can clone, set CUSTOS_CLUSTER=devnet, and reproduce the entire demo independently.
+
+---
+
+## APPLYING FOR COLOSSEUM ACCELERATOR? (Step 3 field)
+
+No (solo founder, pre-revenue open-source tool — not the right fit for accelerator at this stage)
+
+---
+
 ## FINAL CHECKLIST BEFORE CLICKING SUBMIT
 
-- [x] @CustosNox X account created and linked (2026-04-29)
-- [x] Pitch video (F2) uploaded and saved in Arena — https://youtu.be/eX_Ze5lDLrc (2026-05-07)
-- [ ] Tech demo (F3) recorded and uploaded to **Loom** (Superteam UA requires Loom for tech demo)
-- [ ] Tech demo (F3) also uploaded to **YouTube Unlisted** as backup
-- [ ] Fill PRODUCT DEMO VIDEO field in Arena (Step 2) with F3 YouTube URL
-- [ ] "Superteam Ukraine" affiliation marked in form (mandatory for Ukrainian Sidetrack)
-- [ ] Arena survey: "Where is your team primarily based?" → **Ukraine**
-- [ ] Arena survey: "Which group supported you?" → **Superteam**
+**Step 1:**
+- [x] Tagline, short description, long description ready
+- [ ] Fill "What are you building, and who is it for?" — copy from this file
+- [ ] Fill "Why did you decide to build this?" — copy from this file
+- [ ] Fill "Technologies" — copy from this file
+- [ ] Category: Security (or DeFi Infrastructure)
+- [ ] Mobile-focused dApp: No
+
+**Step 2:**
+- [ ] Upload logo: assets/logo.png (1024×1024)
+- [x] GitHub repo: https://github.com/cryptoyasenka/custos-nox
+- [ ] Fill repo context — copy from this file
+- [ ] Fill live product link: https://custos-nox.up.railway.app
+- [ ] Access instructions: "No login required"
+- [x] Pitch video (F2): https://youtu.be/eX_Ze5lDLrc (saved 2026-05-07)
+- [ ] Tech demo (F3): record → upload to **Loom** (Superteam UA requirement) + **YouTube Unlisted**
+- [ ] Fill PRODUCT DEMO VIDEO field with F3 URL
+
+**Step 3:**
+- [ ] "Where is your team primarily based?" → **Ukraine**
+- [ ] Fill team Telegram contact (your personal handle)
+- [ ] X profile: https://x.com/CustosNox
+- [ ] "Anything else judges should know?" — copy from this file
+- [ ] Colosseum accelerator: No
+
+**Final survey:**
+- [ ] "Which group supported you?" → **Superteam**
 - [ ] Character count on A6 verified in actual form field
 - [ ] If Arena doesn't support markdown in A7: remove all ** and # formatting
 - [ ] Click "CONTINUE TO FINAL SURVEY" → submit
