@@ -133,10 +133,14 @@ https://youtu.be/eX_Ze5lDLrc
 
 - [x] @CustosNox X account created and linked (2026-04-29)
 - [x] Pitch video (F2) uploaded and saved in Arena — https://youtu.be/eX_Ze5lDLrc (2026-05-07)
-- [ ] Tech demo (F3) uploaded to YouTube (Unlisted) — URL works in incognito
-- [ ] Fill PRODUCT DEMO VIDEO field in Arena (Step 2) with F3 URL
+- [ ] Tech demo (F3) recorded and uploaded to **Loom** (Superteam UA requires Loom for tech demo)
+- [ ] Tech demo (F3) also uploaded to **YouTube Unlisted** as backup
+- [ ] Fill PRODUCT DEMO VIDEO field in Arena (Step 2) with F3 YouTube URL
 - [ ] "Superteam Ukraine" affiliation marked in form (mandatory for Ukrainian Sidetrack)
+- [ ] Arena survey: "Where is your team primarily based?" → **Ukraine**
+- [ ] Arena survey: "Which group supported you?" → **Superteam**
 - [ ] Character count on A6 verified in actual form field
 - [ ] If Arena doesn't support markdown in A7: remove all ** and # formatting
 - [ ] Click "CONTINUE TO FINAL SURVEY" → submit
+- [ ] **Immediately after Arena submit**: copy project link → submit to https://superteam.fun/earn/listing/frontier-hackathon-ukrainian-track
 - [ ] Deadline: 2026-05-10 23:59 PDT (act as if May 10, not May 11)

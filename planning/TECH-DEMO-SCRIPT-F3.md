@@ -56,28 +56,20 @@ I'm going to trigger each one right now."
 
 ---
 
-### [0:22–0:42] — Switch to terminals — architecture + frame the simulation
+### [0:22–0:38] — Switch to terminals — architecture + frame the simulation
 
 *(Switch to two-terminal layout)*
 
-"Before I start — here's how it works under the hood.
+"Custos Nox is a TypeScript daemon — TypeScript by design, so any JS developer
+can read, audit, and contribute without a Solana dev environment.
 
-Custos Nox is a TypeScript daemon. It opens a WebSocket to a Solana RPC node
-and subscribes to account changes. Every time an account is updated on-chain,
-the new state runs through five detectors — each one knows what a specific attack
-step looks like. If any detector fires, an alert fans out in parallel
-to Discord, Slack, Telegram, and stdout. One slow webhook never blocks the others.
-215 tests. GitHub CI on every push. Zero Rust — any JavaScript developer can contribute.
+It subscribes to account changes over WebSocket. Every update runs through
+five detectors. Any match fans out to Discord, Slack, Telegram, and stdout —
+all in parallel. 215 tests. CI on every push.
 
-Now let me simulate the Drift attack, step by step, on devnet.
-
-Left terminal: Custos Nox watching a Squads multisig and a nonce account —
-the defender's side.
-
-Right terminal: me, playing the attacker —
-running the same on-chain operations that drained Drift.
-
-Watch the left terminal with each move."
+Left terminal: Custos Nox, the defender.
+Right terminal: me, the attacker.
+Watch the left."
 
 ---
 
@@ -185,7 +177,7 @@ One failing webhook never blocks the others.
 A team watching this channel would have had actionable alerts
 for every step of the Drift chain."
 
-*(Scroll slowly through all 4 embeds — 6–8 sec)*
+*(Scroll through all 4 embeds — 3–4 sec)*
 
 ---
 
@@ -244,7 +236,7 @@ Custos Nox is for them.
 
 github.com/cryptoyasenka/custos-nox"
 
-*(Hold on GitHub URL 3 sec. End.)*
+*(Hold on GitHub URL 2 sec. End.)*
 
 ---
 
@@ -253,16 +245,16 @@ github.com/cryptoyasenka/custos-nox"
 | Section | ~Sec | On screen |
 |---------|------|-----------|
 | Opening + Drift timeline | 0:22 | Browser |
-| Architecture + attack framing | 0:35 | Terminals |
+| Architecture + attack framing | 0:16 | Terminals |
 | Detector 1: timelock | 0:23 | Terminal |
 | Detector 2: weakening | 0:20 | Terminal |
 | Detector 3: nonce | 0:20 | Terminal |
 | Detector 5: signer rotation | 0:17 | Terminal |
-| Discord — 4 embeds | 0:13 | Discord |
+| Discord — 4 embeds | 0:08 | Discord |
 | Detector 4: stale nonce tests | 0:10 | Terminal |
 | How to use this | 0:22 | Browser |
-| Close | 0:15 | Browser |
-| **Total** | **~3:17** | |
+| Close | 0:12 | Browser |
+| **Total** | **~2:50** | |
 
 80% of screen time = live product (terminal + Discord). 20% = website.
 
@@ -298,5 +290,7 @@ These are the lines that make the pitch land — practice them until natural:
 - Don't edit out tx confirmation waits — they prove the chain is real
 - Switch to Discord in one smooth motion — already maximized
 - For the integration section: scroll the website slowly, read the code block out loud
-- Upload YouTube Unlisted. Title: `Custos Nox — F3 Tech Demo (Solana Frontier 2026)`
-- Verify URL works in incognito before pasting in Arena field A11
+- Upload to **Loom** (required by Superteam UA guide for tech demo). Also upload YouTube Unlisted as backup.
+- Title: `Custos Nox — F3 Tech Demo (Solana Frontier 2026)`
+- In **Arena A11**: paste YouTube URL. For **Superteam Earn** Ukrainian track submission: paste Loom URL.
+- Verify both URLs work in incognito before pasting
