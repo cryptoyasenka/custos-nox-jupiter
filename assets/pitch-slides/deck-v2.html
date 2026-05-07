@@ -1,0 +1,992 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Custos Nox — Pitch Deck v2</title>
+<style>
+  :root {
+    --bg:      #0a0a0a;
+    --fg:      #ededed;
+    --muted:   #71717a;
+    --dimmed:  #3f3f46;
+    --green:   #4ade80;
+    --red:     #ef4444;
+    --orange:  #f97316;
+    --cyan:    #22d3ee;
+    --yellow:  #facc15;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    overflow: hidden;
+  }
+
+  /* ── Fixed 1920×1080 canvas, scaled to viewport ── */
+  .canvas {
+    position: fixed;
+    width: 1920px; height: 1080px;
+    top: 50%; left: 50%;
+    transform-origin: center center;
+  }
+
+  /* ── Slides ── */
+  .slide {
+    position: absolute; inset: 0;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 140ms ease-out;
+    padding: 72px 96px 60px;
+  }
+  .slide.active { opacity: 1; pointer-events: auto; }
+
+  /* ── Global header bar ── */
+  .slide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 48px;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 22px; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--fg); text-transform: uppercase;
+  }
+  .brand svg { width: 32px; height: 32px; flex-shrink: 0; }
+  .slide-label {
+    font-size: 16px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--dimmed); font-weight: 500;
+  }
+  .slide-num {
+    font-size: 15px; letter-spacing: 0.1em;
+    color: var(--dimmed);
+  }
+
+  /* ── Footer ── */
+  .slide-footer {
+    margin-top: auto;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    font-size: 15px; color: var(--dimmed); letter-spacing: 0.06em;
+  }
+
+  /* ── Nav HUD ── */
+  .hud {
+    position: fixed;
+    bottom: 18px; left: 50%; transform: translateX(-50%);
+    background: rgba(10,10,10,0.8);
+    border: 1px solid #27272a;
+    border-radius: 999px;
+    padding: 7px 16px;
+    font-size: 13px; color: var(--muted);
+    letter-spacing: 0.06em;
+    backdrop-filter: blur(8px);
+    user-select: none;
+    z-index: 100;
+    transition: opacity 400ms;
+  }
+  .hud.idle { opacity: 0.15; }
+  .hud .counter { color: var(--green); font-weight: 700; margin-right: 10px; }
+  .hud kbd {
+    background: #18181b; border: 1px solid #3f3f46; border-radius: 4px;
+    padding: 1px 7px; font-family: ui-monospace, monospace; font-size: 11px;
+    color: var(--fg); margin: 0 3px;
+  }
+
+  /* ═══════════════════════════════════════════
+     SLIDE 1 — INCIDENT
+  ═══════════════════════════════════════════ */
+  .s1-body {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0;
+    text-align: center;
+  }
+  .s1-label {
+    font-size: 20px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 28px;
+  }
+  .s1-amount {
+    font-size: 200px; font-weight: 900; line-height: 0.9;
+    color: var(--red); letter-spacing: -0.02em;
+  }
+  .s1-sub {
+    font-size: 48px; font-weight: 300; color: var(--fg);
+    margin-top: 24px; letter-spacing: 0.02em;
+  }
+  .s1-divider {
+    width: 64px; height: 3px; background: var(--dimmed);
+    border-radius: 2px; margin: 48px auto;
+  }
+  .s1-tag {
+    font-size: 36px; font-weight: 600; color: var(--green);
+    letter-spacing: 0.04em;
+  }
+
+  /* ═══════════════════════════════════════════
+     SLIDE 2 — ATTACK CHAIN
+  ═══════════════════════════════════════════ */
+  .s2-headline {
+    font-size: 72px; font-weight: 800; line-height: 1.05;
+    margin-bottom: 16px;
+  }
+  .s2-sub {
+    font-size: 34px; color: var(--muted); margin-bottom: 80px;
+    font-weight: 300;
+  }
+  .timeline {
+    display: flex; align-items: flex-start; gap: 0;
+    flex: 1;
+  }
+  .tl-step {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    position: relative;
+  }
+  .tl-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 22px; left: 50%; width: 100%;
+    height: 3px; background: var(--dimmed);
+    z-index: 0;
+  }
+  .tl-dot {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--red); z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; font-weight: 800; color: white;
+    flex-shrink: 0;
+  }
+  .tl-dot.drain {
+    width: 68px; height: 68px; font-size: 22px;
+    background: #7f1d1d;
+    border: 3px solid var(--red);
+    box-shadow: 0 0 32px rgba(239,68,68,0.5);
+    margin-top: -12px;
+  }
+  .tl-day {
+    margin-top: 22px;
+    font-size: 18px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .tl-name {
+    margin-top: 10px;
+    font-size: 26px; font-weight: 700; color: var(--fg);
+    text-align: center; line-height: 1.2;
+  }
+  .tl-desc {
+    margin-top: 12px;
+    font-size: 20px; color: var(--muted); text-align: center;
+    line-height: 1.4; max-width: 260px;
+  }
+  .s2-footer-line {
+    text-align: center; font-size: 28px; color: var(--orange);
+    font-weight: 600; letter-spacing: 0.04em; margin-top: 48px;
+  }
+
+  /* ═══════════════════════════════════════════
+     SLIDE 3 — THE GAP
+  ═══════════════════════════════════════════ */
+  .s3-headline {
+    font-size: 60px; font-weight: 800; margin-bottom: 80px;
+  }
+  .gap-row {
+    display: flex; gap: 48px; flex: 1; align-items: stretch;
+  }
+  .gap-box {
+    flex: 1; border-radius: 16px; padding: 52px 52px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .gap-box.left {
+    background: #18181b; border: 2px solid #27272a;
+  }
+  .gap-box.right {
+    background: #0f1a0f; border: 2px solid #166534;
+  }
+  .gap-label {
+    font-size: 18px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 24px;
+  }
+  .gap-num {
+    font-size: 120px; font-weight: 900; line-height: 0.9;
+    letter-spacing: -0.02em;
+  }
+  .gap-num.small { color: var(--dimmed); }
+  .gap-num.large { color: var(--green); }
+  .gap-desc {
+    font-size: 28px; color: var(--muted); margin-top: 24px; line-height: 1.4;
+  }
+  .gap-footer {
+    text-align: center; font-size: 42px; font-weight: 800;
+    color: var(--green); margin-top: 56px;
+  }
+
+  /* ═══════════════════════════════════════════
+     SLIDE 4 — SOLUTION
+  ═══════════════════════════════════════════ */
+  .s4-headline {
+    font-size: 58px; font-weight: 800; margin-bottom: 16px;
+    line-height: 1.1;
+  }
+  .s4-sub {
+    font-size: 30px; color: var(--muted); margin-bottom: 60px;
+  }
+  .detector-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+    flex: 1;
+  }
+  .detector-card {
+    border-radius: 14px; padding: 36px 40px;
+    background: #0f0f0f; border: 1px solid #27272a;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .det-badge {
+    display: inline-flex; align-items: center;
+    padding: 4px 14px; border-radius: 6px;
+    font-size: 15px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; width: fit-content;
+  }
+  .det-badge.critical { background: rgba(239,68,68,0.15); color: var(--red); }
+  .det-badge.high     { background: rgba(249,115,22,0.15); color: var(--orange); }
+  .det-name {
+    font-size: 30px; font-weight: 800; color: var(--fg); line-height: 1.1;
+  }
+  .det-step {
+    font-size: 19px; color: var(--muted); line-height: 1.4;
+  }
+  .det-drift {
+    font-size: 16px; color: var(--dimmed); letter-spacing: 0.06em;
+    text-transform: uppercase; margin-top: 4px;
+  }
+  .s4-plus {
+    text-align: center; font-size: 26px; color: var(--cyan);
+    margin-top: 32px; font-weight: 500;
+  }
+
+  /* ═══════════════════════════════════════════
+     SLIDE 5 — FOR WHO
+  ═══════════════════════════════════════════ */
+  .s5-body {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: center; gap: 0;
+  }
+  .s5-label {
+    font-size: 22px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 28px;
+  }
+  .s5-main {
+    font-size: 100px; font-weight: 900; color: var(--cyan);
+    line-height: 0.95; letter-spacing: -0.01em;
+    margin-bottom: 16px;
+  }
+  .s5-sub-main {
+    font-size: 56px; font-weight: 300; color: var(--fg);
+    margin-bottom: 56px;
+  }
+  .s5-tags {
+    display: flex; gap: 24px; flex-wrap: wrap;
+  }
+  .s5-tag {
+    padding: 12px 28px; border-radius: 999px;
+    border: 1px solid var(--dimmed);
+    font-size: 24px; color: var(--muted);
+  }
+  .s5-stride-note {
+    margin-top: 56px; font-size: 26px; color: var(--dimmed);
+    font-style: italic;
+  }
+
+  /* ═══════════════════════════════════════════
+     SLIDE 6 — LIVE (PROOF)
+  ═══════════════════════════════════════════ */
+  .s6-headline {
+    font-size: 60px; font-weight: 800; margin-bottom: 16px;
+  }
+  .s6-sub {
+    font-size: 30px; color: var(--muted); margin-bottom: 72px;
+  }
+  .proof-row {
+    display: flex; gap: 36px; flex: 1;
+  }
+  .proof-card {
+    flex: 1; background: #0f0f0f; border: 1px solid #27272a;
+    border-radius: 16px; padding: 48px 44px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .proof-num {
+    font-size: 100px; font-weight: 900; line-height: 0.9;
+    letter-spacing: -0.02em;
+  }
+  .proof-label {
+    font-size: 26px; color: var(--muted); margin-top: 16px;
+    font-weight: 400;
+  }
+  .proof-detail {
+    font-size: 20px; color: var(--dimmed); margin-top: 12px;
+    line-height: 1.4;
+  }
+  .s6-url {
+    text-align: center; font-size: 32px; color: var(--green);
+    font-weight: 600; margin-top: 48px; letter-spacing: 0.02em;
+  }
+
+  /* ═══════════════════════════════════════════
+     SLIDE 7 — SETUP IN 5 MIN
+  ═══════════════════════════════════════════ */
+  .s7-headline {
+    font-size: 72px; font-weight: 900; margin-bottom: 16px;
+    line-height: 1.0;
+  }
+  .s7-sub {
+    font-size: 32px; color: var(--muted); margin-bottom: 64px;
+  }
+  .steps-row {
+    display: flex; gap: 36px; flex: 1; align-items: stretch;
+  }
+  .step-card {
+    flex: 1; background: #0f0f0f; border: 1px solid #27272a;
+    border-radius: 14px; padding: 44px 40px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .step-num {
+    font-size: 48px; font-weight: 900; color: var(--green);
+    line-height: 1;
+  }
+  .step-action {
+    font-size: 30px; font-weight: 700; color: var(--fg);
+    line-height: 1.2;
+  }
+  .step-detail {
+    font-size: 20px; color: var(--muted); line-height: 1.5;
+  }
+  .code-block {
+    background: #18181b; border: 1px solid #27272a; border-radius: 10px;
+    padding: 20px 28px;
+    font-family: "Cascadia Code", ui-monospace, monospace;
+    font-size: 18px; color: var(--cyan); line-height: 1.6;
+    white-space: pre;
+  }
+  .s7-note {
+    margin-top: 40px; font-size: 24px;
+    color: var(--muted); text-align: center;
+  }
+  .s7-note span { color: var(--green); font-weight: 600; }
+
+  /* ═══════════════════════════════════════════
+     SLIDE 8 — GTM
+  ═══════════════════════════════════════════ */
+  .s8-headline {
+    font-size: 60px; font-weight: 800; margin-bottom: 16px;
+  }
+  .s8-sub {
+    font-size: 30px; color: var(--muted); margin-bottom: 64px;
+  }
+  .gtm-col {
+    display: flex; flex-direction: column; gap: 28px; flex: 1;
+  }
+  .gtm-row {
+    display: flex; align-items: center; gap: 40px;
+    background: #0f0f0f; border: 1px solid #27272a;
+    border-radius: 14px; padding: 36px 44px;
+  }
+  .gtm-icon {
+    width: 64px; height: 64px; border-radius: 14px;
+    background: #18181b;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; flex-shrink: 0;
+  }
+  .gtm-text { flex: 1; }
+  .gtm-channel {
+    font-size: 28px; font-weight: 700; color: var(--fg);
+    margin-bottom: 8px;
+  }
+  .gtm-desc {
+    font-size: 21px; color: var(--muted); line-height: 1.4;
+  }
+  .gtm-size {
+    font-size: 42px; font-weight: 800; color: var(--green);
+    flex-shrink: 0; text-align: right; line-height: 1;
+  }
+  .gtm-size small {
+    display: block; font-size: 16px; font-weight: 400;
+    color: var(--muted); letter-spacing: 0.08em;
+    text-transform: uppercase; margin-top: 4px;
+  }
+
+  /* ═══════════════════════════════════════════
+     SLIDE 9 — VISION
+  ═══════════════════════════════════════════ */
+  .s9-headline {
+    font-size: 60px; font-weight: 800; margin-bottom: 16px;
+  }
+  .s9-sub {
+    font-size: 32px; color: var(--muted); margin-bottom: 64px;
+  }
+  .vision-col {
+    display: flex; flex-direction: column; gap: 28px; flex: 1;
+  }
+  .vision-row {
+    display: flex; align-items: center; gap: 36px;
+    background: #0f0f0f; border: 1px solid #27272a;
+    border-radius: 14px; padding: 36px 44px;
+  }
+  .vision-v {
+    font-size: 22px; font-weight: 800; letter-spacing: 0.08em;
+    text-transform: uppercase; flex-shrink: 0; width: 44px;
+    color: var(--dimmed);
+  }
+  .vision-v.active { color: var(--green); }
+  .vision-title {
+    font-size: 32px; font-weight: 700; color: var(--fg); flex: 1;
+  }
+  .vision-title.active { color: var(--green); }
+  .vision-desc {
+    font-size: 22px; color: var(--muted); flex: 2; line-height: 1.4;
+  }
+  .vision-status {
+    font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 6px 18px; border-radius: 999px; flex-shrink: 0;
+    font-weight: 600;
+  }
+  .vision-status.live { background: rgba(74,222,128,0.15); color: var(--green); }
+  .vision-status.next { background: rgba(34,211,238,0.1); color: var(--cyan); }
+  .vision-status.future { background: rgba(63,63,70,0.5); color: var(--dimmed); }
+  .s9-footer-line {
+    margin-top: 44px; text-align: center;
+    font-size: 32px; font-weight: 700; color: var(--fg);
+    font-style: italic;
+  }
+  .s9-footer-line span { color: var(--green); }
+
+  /* ═══════════════════════════════════════════
+     SLIDE 10 — TEAM + CTA
+  ═══════════════════════════════════════════ */
+  .s10-body {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0;
+    text-align: center;
+  }
+  .s10-logo { margin-bottom: 36px; }
+  .s10-logo svg { width: 80px; height: 80px; }
+  .s10-name {
+    font-size: 96px; font-weight: 900; letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .s10-tagline {
+    font-size: 32px; color: var(--muted); margin-bottom: 64px;
+  }
+  .s10-github {
+    font-size: 42px; color: var(--green); font-weight: 600;
+    letter-spacing: 0.02em; margin-bottom: 64px;
+  }
+  .s10-team {
+    font-size: 26px; color: var(--muted); letter-spacing: 0.06em;
+  }
+  .s10-team span { color: var(--fg); }
+</style>
+</head>
+<body>
+
+<div class="canvas" id="canvas">
+
+  <!-- ─────── LOGO SVG (reused) ─────── -->
+  <svg id="logo-svg" style="display:none">
+    <symbol id="logo" viewBox="0 0 1024 1024">
+      <polygon points="512,180 832,360 832,664 512,844 192,664 192,360"
+               fill="none" stroke="#E8E8E8" stroke-width="18"
+               stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M 618 406 A 150 150 0 1 0 618 618"
+            fill="none" stroke="#E8E8E8" stroke-width="56" stroke-linecap="round"/>
+      <circle cx="512" cy="512" r="36" fill="#E8E8E8"/>
+    </symbol>
+  </svg>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 1 — THE INCIDENT
+  ══════════════════════════════════════ -->
+  <div class="slide active" id="s1">
+    <div class="slide-header">
+      <div class="brand">
+        <svg viewBox="0 0 1024 1024"><use href="#logo"/></svg>
+        CUSTOS NOX
+      </div>
+      <div class="slide-num">01 / 10</div>
+    </div>
+
+    <div class="s1-body">
+      <div class="s1-label">Drift Protocol · April 1, 2026</div>
+      <div class="s1-amount">$285M</div>
+      <div class="s1-sub">drained in 12 minutes</div>
+      <div class="s1-divider"></div>
+      <div class="s1-tag">9 days of on-chain warnings &nbsp;·&nbsp; Zero alerts fired</div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Open-source attack detection for Solana multisigs and DAOs</span>
+      <span>Frontier 2026 · Superteam Ukraine</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 2 — THE ATTACK CHAIN
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s2">
+    <div class="slide-header">
+      <div class="brand">
+        <svg viewBox="0 0 1024 1024"><use href="#logo"/></svg>
+        CUSTOS NOX
+      </div>
+      <div style="display:flex;gap:48px;align-items:center">
+        <div class="slide-label">The Problem</div>
+        <div class="slide-num">02 / 10</div>
+      </div>
+    </div>
+
+    <div class="s2-headline">Every step was visible on-chain.</div>
+    <div class="s2-sub">The attacker left a trail for 9 days. Nobody was watching.</div>
+
+    <div class="timeline">
+      <div class="tl-step">
+        <div class="tl-dot">1</div>
+        <div class="tl-day">Day 1</div>
+        <div class="tl-name">Timelock<br>Removed</div>
+        <div class="tl-desc">Governance window dropped to zero. DAO lost the ability to react.</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-dot">2</div>
+        <div class="tl-day">Day 3</div>
+        <div class="tl-name">Multisig<br>Weakened</div>
+        <div class="tl-desc">Threshold cut from 3-of-5 to 1-of-5. One key controls everything.</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-dot">3</div>
+        <div class="tl-day">Day 7</div>
+        <div class="tl-name">Nonce<br>Armed</div>
+        <div class="tl-desc">Pre-signed drain transaction seeded. Executes whenever attacker decides.</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-dot drain">💀</div>
+        <div class="tl-day">Day 9</div>
+        <div class="tl-name">Treasury<br>Drained</div>
+        <div class="tl-desc">$285M gone in 12 minutes. All four steps happened in public view.</div>
+      </div>
+    </div>
+
+    <div class="s2-footer-line">Four steps. Nine days. Zero alerts.</div>
+
+    <div class="slide-footer">
+      <span></span>
+      <span>Frontier 2026 · Superteam Ukraine</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 3 — THE GAP
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s3">
+    <div class="slide-header">
+      <div class="brand">
+        <svg viewBox="0 0 1024 1024"><use href="#logo"/></svg>
+        CUSTOS NOX
+      </div>
+      <div style="display:flex;gap:48px;align-items:center">
+        <div class="slide-label">The Market Gap</div>
+        <div class="slide-num">03 / 10</div>
+      </div>
+    </div>
+
+    <div class="s3-headline">Solana has a monitoring program.<br>It covers <span style="color:var(--dimmed)">1%</span> of multisigs.</div>
+
+    <div class="gap-row">
+      <div class="gap-box left">
+        <div class="gap-label">Solana STRIDE</div>
+        <div class="gap-num small">~100</div>
+        <div class="gap-desc">protocols monitored<br>$10M+ TVL threshold<br>Roughly the top 0.5%</div>
+      </div>
+      <div class="gap-box right">
+        <div class="gap-label">Everyone else</div>
+        <div class="gap-num large">10,000+</div>
+        <div class="gap-desc">Squads multisigs on-chain<br>DAOs, treasuries, grant committees<br><strong style="color:var(--green)">Nothing. Zero coverage.</strong></div>
+      </div>
+    </div>
+
+    <div class="gap-footer">The other 99% have nothing. Custos Nox is for them.</div>
+
+    <div class="slide-footer">
+      <span></span>
+      <span>Frontier 2026 · Superteam Ukraine</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 4 — THE SOLUTION
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s4">
+    <div class="slide-header">
+      <div class="brand">
+        <svg viewBox="0 0 1024 1024"><use href="#logo"/></svg>
+        CUSTOS NOX
+      </div>
+      <div style="display:flex;gap:48px;align-items:center">
+        <div class="slide-label">The Solution</div>
+        <div class="slide-num">04 / 10</div>
+      </div>
+    </div>
+
+    <div class="s4-headline">One detector per step in the Drift attack chain.</div>
+    <div class="s4-sub">Any single alert would have bought hours of response time.</div>
+
+    <div class="detector-grid">
+      <div class="detector-card">
+        <div class="det-badge critical">CRITICAL</div>
+        <div class="det-name">TimelockRemoval<br>Detector</div>
+        <div class="det-step">Fires when a governance timelock drops to zero or below half.</div>
+        <div class="det-drift">Drift step 1 · Day 1</div>
+      </div>
+      <div class="detector-card">
+        <div class="det-badge high">HIGH</div>
+        <div class="det-name">MultisigWeakening<br>Detector</div>
+        <div class="det-step">Fires when a Squads signer threshold is reduced (e.g. 3-of-5 → 1-of-5).</div>
+        <div class="det-drift">Drift step 2 · Day 3</div>
+      </div>
+      <div class="detector-card">
+        <div class="det-badge critical">CRITICAL</div>
+        <div class="det-name">PrivilegedNonce<br>Detector</div>
+        <div class="det-step">Fires when a nonce account is initialized under an attacker key.</div>
+        <div class="det-drift">Drift step 3 · Day 7</div>
+      </div>
+      <div class="detector-card">
+        <div class="det-badge high">HIGH</div>
+        <div class="det-name">StaleNonce<br>ExecutionDetector</div>
+        <div class="det-step">Fires when a durable nonce advances more than 1 hour after seeding.</div>
+        <div class="det-drift">Drift step 4 — the drain itself</div>
+      </div>
+    </div>
+
+    <div class="s4-plus">+ SignerSetChangeDetector — covers adjacent signer-rotation attacks that have hit other Solana protocols</div>
+
+    <div class="slide-footer">
+      <span></span>
+      <span>Frontier 2026 · Superteam Ukraine</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 5 — FOR WHO
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s5">
+    <div class="slide-header">
+      <div class="brand">
+        <svg viewBox="0 0 1024 1024"><use href="#logo"/></svg>
+        CUSTOS NOX
+      </div>
+      <div style="display:flex;gap:48px;align-items:center">
+        <div class="slide-label">Target User</div>
+        <div class="slide-num">05 / 10</div>
+      </div>
+    </div>
+
+    <div class="s5-body">
+      <div class="s5-label">First users</div>
+      <div class="s5-main">Squads</div>
+      <div class="s5-sub-main">multisig operators</div>
+      <div class="s5-tags">
+        <div class="s5-tag">Protocol treasuries</div>
+        <div class="s5-tag">Grant committees</div>
+        <div class="s5-tag">DAO core teams</div>
+        <div class="s5-tag">Hackathon prize pools</div>
+      </div>
+      <div class="s5-stride-note">Anyone who falls below STRIDE's $10M TVL threshold — and has no other option.</div>
+    </div>
+
+    <div class="slide-footer">
+      <span></span>
+      <span>Frontier 2026 · Superteam Ukraine</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 6 — IT'S LIVE
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s6">
+    <div class="slide-header">
+      <div class="brand">
+        <svg viewBox="0 0 1024 1024"><use href="#logo"/></svg>
+        CUSTOS NOX
+      </div>
+      <div style="display:flex;gap:48px;align-items:center">
+        <div class="slide-label">Proof of Work</div>
+        <div class="slide-num">06 / 10</div>
+      </div>
+    </div>
+
+    <div class="s6-headline">It's built. It's tested. It's running.</div>
+    <div class="s6-sub">Not a prototype. A working product on devnet today.</div>
+
+    <div class="proof-row">
+      <div class="proof-card">
+        <div>
+          <div class="proof-num" style="color:var(--green)">215</div>
+          <div class="proof-label">tests passing</div>
+        </div>
+        <div class="proof-detail">Unit + integration. GitHub Actions CI on every push. Green badge.</div>
+      </div>
+      <div class="proof-card">
+        <div>
+          <div class="proof-num" style="color:var(--cyan)">&lt; 1s</div>
+          <div class="proof-label">alert latency</div>
+        </div>
+        <div class="proof-detail">WebSocket subscription to Solana RPC. On-chain change to Discord alert in under a second.</div>
+      </div>
+      <div class="proof-card">
+        <div>
+          <div class="proof-num" style="color:var(--orange)">MIT</div>
+          <div class="proof-label">licensed</div>
+        </div>
+        <div class="proof-detail">Public repo. Open issue tracker. Any team can audit, fork, and self-host with zero friction.</div>
+      </div>
+    </div>
+
+    <div class="s6-url">custos-nox.up.railway.app &nbsp;·&nbsp; github.com/cryptoyasenka/custos-nox</div>
+
+    <div class="slide-footer">
+      <span></span>
+      <span>Frontier 2026 · Superteam Ukraine</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 7 — SETUP IN 5 MINUTES
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s7">
+    <div class="slide-header">
+      <div class="brand">
+        <svg viewBox="0 0 1024 1024"><use href="#logo"/></svg>
+        CUSTOS NOX
+      </div>
+      <div style="display:flex;gap:48px;align-items:center">
+        <div class="slide-label">Zero Friction Adoption</div>
+        <div class="slide-num">07 / 10</div>
+      </div>
+    </div>
+
+    <div class="s7-headline">From vulnerable to protected<br>in 5 minutes.</div>
+    <div class="s7-sub">No Rust. No credit card. No configuration hell.</div>
+
+    <div class="steps-row">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-action">Copy your Squads PDA</div>
+        <div class="step-detail">It's visible in app.squads.so. Just an address — same as a wallet address.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-action">Set one env variable</div>
+        <div class="code-block">CUSTOS_WATCH=&lt;PROGRAM&gt;:&lt;YOUR_PDA&gt;</div>
+        <div class="step-detail">Add a Discord or Telegram webhook URL. That's the full config.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-action">Run npm run dev</div>
+        <div class="step-detail">Or docker run. From that moment — any config change on your multisig fires an immediate alert.</div>
+      </div>
+    </div>
+
+    <div class="s7-note">
+      <span>Free Helius RPC. MIT licensed. </span>
+      No paid tiers. No lock-in. The self-hosted tier stays free permanently.
+    </div>
+
+    <div class="slide-footer">
+      <span></span>
+      <span>Frontier 2026 · Superteam Ukraine</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 8 — GTM
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s8">
+    <div class="slide-header">
+      <div class="brand">
+        <svg viewBox="0 0 1024 1024"><use href="#logo"/></svg>
+        CUSTOS NOX
+      </div>
+      <div style="display:flex;gap:48px;align-items:center">
+        <div class="slide-label">Go-to-Market</div>
+        <div class="slide-num">08 / 10</div>
+      </div>
+    </div>
+
+    <div class="s8-headline">The users already exist on-chain.</div>
+    <div class="s8-sub">10,000+ Squads multisigs are visible. We know exactly where to go.</div>
+
+    <div class="gtm-col">
+      <div class="gtm-row">
+        <div class="gtm-icon">🔍</div>
+        <div class="gtm-text">
+          <div class="gtm-channel">GitHub organic search</div>
+          <div class="gtm-desc">Developers searching "solana multisig monitor" or "squads alert" — README and dashboard written to rank for exactly these queries.</div>
+        </div>
+        <div class="gtm-size">∞<small>organic</small></div>
+      </div>
+      <div class="gtm-row">
+        <div class="gtm-icon">🛡️</div>
+        <div class="gtm-text">
+          <div class="gtm-channel">Squads ecosystem</div>
+          <div class="gtm-desc">Squads Discord #security and #dao-ops channels host exactly the teams who need this. Direct posting post-hackathon.</div>
+        </div>
+        <div class="gtm-size">10K+<small>multisigs</small></div>
+      </div>
+      <div class="gtm-row">
+        <div class="gtm-icon">🌍</div>
+        <div class="gtm-text">
+          <div class="gtm-channel">Superteam network</div>
+          <div class="gtm-desc">15+ country chapters with active DAOs and grant committees. Superteam Ukraine briefed. Wider rollout through country leads.</div>
+        </div>
+        <div class="gtm-size">15+<small>chapters</small></div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span></span>
+      <span>Frontier 2026 · Superteam Ukraine</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 9 — VISION
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s9">
+    <div class="slide-header">
+      <div class="brand">
+        <svg viewBox="0 0 1024 1024"><use href="#logo"/></svg>
+        CUSTOS NOX
+      </div>
+      <div style="display:flex;gap:48px;align-items:center">
+        <div class="slide-label">Vision</div>
+        <div class="slide-num">09 / 10</div>
+      </div>
+    </div>
+
+    <div class="s9-headline">The security layer Solana doesn't have yet.</div>
+    <div class="s9-sub">From self-hosted daemon to ecosystem-wide threat intelligence.</div>
+
+    <div class="vision-col">
+      <div class="vision-row">
+        <div class="vision-v active">v1</div>
+        <div class="vision-title active">Self-hosted daemon</div>
+        <div class="vision-desc">Open source, MIT, free forever. Any DAO sets up in 5 minutes. Community trust is the moat.</div>
+        <div class="vision-status live">Live today</div>
+      </div>
+      <div class="vision-row">
+        <div class="vision-v">v2</div>
+        <div class="vision-title">Hosted alert feed</div>
+        <div class="vision-desc">Zero-infra monitoring for teams who can't self-host. Subscribe, add webhook, done.</div>
+        <div class="vision-status next">Up next</div>
+      </div>
+      <div class="vision-row">
+        <div class="vision-v">v3</div>
+        <div class="vision-title">Mainnet watchlist</div>
+        <div class="vision-desc">Top-50 Squads multisigs by TVL, pre-configured. Public threat feed for the whole ecosystem.</div>
+        <div class="vision-status future">Roadmap</div>
+      </div>
+    </div>
+
+    <div class="s9-footer-line">"The other 10,000+ DAOs on Solana need a <span>Night Guardian</span>."</div>
+
+    <div class="slide-footer">
+      <span></span>
+      <span>Frontier 2026 · Superteam Ukraine</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 10 — TEAM + CTA
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s10">
+    <div class="slide-header">
+      <div class="brand">
+        <svg viewBox="0 0 1024 1024"><use href="#logo"/></svg>
+        CUSTOS NOX
+      </div>
+      <div class="slide-num">10 / 10</div>
+    </div>
+
+    <div class="s10-body">
+      <div class="s10-logo">
+        <svg viewBox="0 0 1024 1024" width="80" height="80"><use href="#logo"/></svg>
+      </div>
+      <div class="s10-name">CUSTOS NOX</div>
+      <div class="s10-tagline">Open-source attack detection for Solana multisigs and DAOs</div>
+      <div class="s10-github">github.com/cryptoyasenka/custos-nox</div>
+      <div class="s10-team">
+        <span>Yasya</span> &nbsp;·&nbsp; Solo founder, full-stack dev &nbsp;·&nbsp;
+        <span>Superteam Ukraine</span> &nbsp;·&nbsp; Frontier 2026
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Built the day after the Drift exploit. Because nothing else existed.</span>
+      <span>custos-nox.up.railway.app</span>
+    </div>
+  </div>
+
+</div><!-- /canvas -->
+
+<!-- ─── Navigation HUD ─── -->
+<div class="hud" id="hud">
+  <span class="counter" id="counter">1 / 10</span>
+  <kbd>←</kbd> <kbd>→</kbd> &nbsp; or click
+</div>
+
+<script>
+const slides = Array.from(document.querySelectorAll('.slide'));
+const counter = document.getElementById('counter');
+const hud = document.getElementById('hud');
+let current = 0;
+let idleTimer;
+
+function scale() {
+  const canvas = document.getElementById('canvas');
+  const sw = window.innerWidth, sh = window.innerHeight;
+  const s = Math.min(sw / 1920, sh / 1080);
+  canvas.style.transform = `translate(-50%, -50%) scale(${s})`;
+}
+scale();
+window.addEventListener('resize', scale);
+
+function go(n) {
+  slides[current].classList.remove('active');
+  current = Math.max(0, Math.min(slides.length - 1, n));
+  slides[current].classList.add('active');
+  counter.textContent = `${current + 1} / ${slides.length}`;
+}
+
+function resetIdle() {
+  hud.classList.remove('idle');
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => hud.classList.add('idle'), 2500);
+}
+
+document.addEventListener('keydown', e => {
+  resetIdle();
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); go(current + 1); }
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    { e.preventDefault(); go(current - 1); }
+  if (e.key === 'Home') go(0);
+  if (e.key === 'End')  go(slides.length - 1);
+});
+
+document.addEventListener('click', e => {
+  resetIdle();
+  const cx = e.clientX / window.innerWidth;
+  go(cx > 0.5 ? current + 1 : current - 1);
+});
+
+resetIdle();
+</script>
+</body>
+</html>

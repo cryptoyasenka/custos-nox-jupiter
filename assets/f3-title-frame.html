@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Custos Nox — Title Frame</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: #0a0a0a;
+    overflow: hidden;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+
+  /* Fills the viewport while keeping 16:9 */
+  .frame {
+    position: fixed; inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Background: ghosted oversized hexagon for depth */
+  .bg-hex {
+    position: absolute;
+    width: min(110vw, 110vh);
+    height: min(110vw, 110vh);
+    opacity: 0.04;
+    pointer-events: none;
+  }
+
+  /* Subtle green radial glow behind logo */
+  .glow {
+    position: absolute;
+    width: 480px; height: 480px;
+    background: radial-gradient(circle, rgba(74,222,128,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .center {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    z-index: 1;
+  }
+
+  /* Logo mark */
+  .logo-mark {
+    width: 96px; height: 96px;
+    margin-bottom: 32px;
+    filter: drop-shadow(0 0 18px rgba(74,222,128,0.35));
+  }
+
+  /* CUSTOS NOX */
+  .wordmark {
+    font-size: clamp(48px, 6vw, 72px);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: #ededed;
+    line-height: 1;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  /* Divider */
+  .divider {
+    width: 48px; height: 2px;
+    background: #4ade80;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    opacity: 0.8;
+  }
+
+  /* Subtitle */
+  .subtitle {
+    font-size: clamp(16px, 2vw, 22px);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: #4ade80;
+    line-height: 1.4;
+    text-align: center;
+    max-width: 620px;
+  }
+
+  /* Footer */
+  .footer {
+    position: fixed;
+    bottom: 40px; left: 0; right: 0;
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #3f3f46;
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <!-- Ghost hex background -->
+  <svg class="bg-hex" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="512,180 832,360 832,664 512,844 192,664 192,360"
+             fill="none" stroke="#E8E8E8" stroke-width="8"
+             stroke-linejoin="round" stroke-linecap="round"/>
+  </svg>
+
+  <!-- Green glow -->
+  <div class="glow"></div>
+
+  <div class="center">
+    <!-- Logo mark (inline SVG for crisp scaling) -->
+    <svg class="logo-mark" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="512,180 832,360 832,664 512,844 192,664 192,360"
+               fill="none" stroke="#E8E8E8" stroke-width="18"
+               stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M 618 406 A 150 150 0 1 0 618 618"
+            fill="none" stroke="#E8E8E8"
+            stroke-width="56" stroke-linecap="round"/>
+      <circle cx="512" cy="512" r="36" fill="#E8E8E8"/>
+    </svg>
+
+    <div class="wordmark">Custos Nox</div>
+    <div class="divider"></div>
+    <div class="subtitle">Real-time attack detection<br>for Solana multisigs and DAOs</div>
+  </div>
+
+</div>
+<div class="footer">Solana Frontier Hackathon &nbsp;·&nbsp; 2026</div>
+</body>
+</html>
