@@ -1,15 +1,16 @@
 # F3 — Technical Demo Script (~3:00 min, English)
-# REVISED 2026-05-07 v3 — practical-first, detector-by-detector
+# REVISED 2026-05-08 v4 — context-first, judge-without-crypto-background friendly
 
-**Recording:** OBS Studio / Loom / Win+G. Screen only. Upload YouTube Unlisted.
-**Target:** 2:50–3:10. Mostly terminal. No slides.
-**Rules note:** Colosseum requires a working product demo — not a slide deck. This script is 80% live terminal.
+**Recording:** OBS Studio / Loom / Win+G. Screen only. Upload Loom (primary for Superteam UA) + YouTube Unlisted (backup, Arena A11).
+**Target:** 2:55–3:05. Mostly browser + terminal. No slides.
+**Rules note:** Colosseum requires a working product demo — not a slide deck. This script is 75% live product (browser + terminal + Discord), 25% explanation.
+**Why this revision:** the previous version assumed the judge knows what a multisig and Squads are. Some judges don't. The first 30 seconds now build the foundation — DAO treasury, multisig, Squads — before the pitch lands.
 
 ---
 
 ## PRE-RECORDING SETUP (10 min)
 
-**Accounts (fresh, created 2026-05-07 for recording):**
+**Accounts (fresh, devnet):**
 - Multisig PDA: `Cn7XXry3SWbeqkBsH7uWXLViz4ffUqzyb3fi5Dkfr9Ao`
 - Nonce pubkey: `BYCMzkaGMTsPLLxzoZE8qqLb56ov6V6hnoAacgnu2KBE`
 
@@ -22,14 +23,14 @@ CUSTOS_DISCORD_WEBHOOK=<your webhook>
 ```
 
 **Screen layout:**
-- **Terminal LEFT:** `npm run dev` — daemon running, 2 subscription lines visible
+- **Browser tab:** `https://custos-nox.up.railway.app` — open at top (hero), large dark font
+- **Terminal LEFT:** `npm run dev` already running, 2 subscription lines visible
 - **Terminal RIGHT:** empty prompt at `C:\Projects\custos`
-- **Browser tab:** `https://custos-nox.up.railway.app` — ready to switch to
 - **Discord tab:** `#custos-alerts` — scrolled to bottom
 
-Large dark font. Two terminals side by side take the full screen. Switch to browser/Discord only at marked moments.
+Switch between browser → two-terminal layout → Discord at marked moments.
 
-**Before recording:** run each smoke command once to verify all 4 fire. Then run `npm run smoke:create` for a fresh multisig and update `.env` + restart daemon.
+**Before recording:** run each smoke command once to verify all 4 fire. Then `npm run smoke:create` for a fresh multisig, update `.env`, restart daemon.
 
 ---
 
@@ -37,161 +38,127 @@ Large dark font. Two terminals side by side take the full screen. Switch to brow
 
 ---
 
-### [0:00–0:22] — Opening: the problem in numbers
+### [0:00–0:30] — What's a DAO treasury, and why this matters
 
 *(Browser full screen — dashboard hero)*
 
-"On April 1, 2026, Drift Protocol lost $285 million in twelve minutes.
+"DAOs — decentralized organizations on Solana — manage their funds through multisig wallets. A multisig works like a company bank account that requires multiple signatures: three out of five people must approve before any money moves.
 
-It wasn't a zero-day exploit. The attacker spent nine days preparing on-chain —
-staging pre-signed transactions via durable nonces, reconfiguring the multisig
-to a 2-of-5 threshold with zero timelock, then arming the drain.
-Every step was visible on-chain. None of it was flagged.
+Squads is the most popular multisig tool on Solana. Many of Solana's largest DAOs, grant committees, and protocol treasuries use it. And right now, most of them have zero monitoring.
 
-This is Custos Nox. It catches that attack chain — in real time."
+In April 2026, that cost one protocol $285 million."
 
 *(Scroll down to Drift Timeline — 4 cards visible)*
 
-"Here's what that nine-day window looked like. Four steps. Four detectors.
-I'm going to trigger each one right now."
+"The Drift attack wasn't a sudden hack. The attacker spent nine days making config changes — in full public view, on-chain. No tool sent a single alert.
+
+Custos Nox is that tool."
 
 ---
 
-### [0:22–0:38] — Switch to terminals — architecture + frame the simulation
+### [0:30–0:45] — The detectors, on the site
+
+*(Scroll up to "What it catches" section — 5 detector cards with "Drift step 1/4" labels)*
+
+"Five detectors running today. Four of them map to one step each in the Drift attack chain. The fifth covers an adjacent attack vector that has hit other Solana protocols.
+
+Timelock removal. Multisig weakening. Privileged nonce. Stale nonce execution.
+
+Any single one firing would have given the DAO days to respond.
+
+Let me run that attack right now — live, on devnet."
+
+---
+
+### [0:45–0:58] — Switch to terminals
 
 *(Switch to two-terminal layout)*
 
-"Custos Nox is a TypeScript daemon — TypeScript by design, so any JS developer
-can read, audit, and contribute without a Solana dev environment.
+"Left terminal — Custos Nox, watching a Squads multisig on devnet. That's the DAO's security monitor.
 
-It subscribes to account changes over WebSocket. Every update runs through
-five detectors. Any match fans out to Discord, Slack, Telegram, and stdout —
-all in parallel. 215 tests. CI on every push.
+Right terminal — me, playing the attacker. Same steps, same order as Drift.
 
-Left terminal: Custos Nox, the defender.
-Right terminal: me, the attacker.
-Watch the left."
+Watch the left terminal."
 
 ---
 
-### [0:35–0:58] — Detector 1: TimelockRemovalDetector
+### [0:58–1:15] — Detector 1: Timelock
 
-*(Narrate before typing — right terminal)*
-
-"Step one of the Drift attack: remove the governance timelock.
-
-The timelock is what gives a DAO time to react. On mainnet Drift,
-it was dropped to zero six days before the drain —
-closing the community's window to pause withdrawals or vote to cancel.
-
-TimelockRemovalDetector fires the moment that happens."
+"The attacker's first move: remove the governance timelock. The timelock is the DAO's reaction window — the time the community has to notice something is wrong and respond."
 
 *(Type and Enter:)*
 ```
 npm run smoke:timelock -- Cn7XXry3SWbeqkBsH7uWXLViz4ffUqzyb3fi5Dkfr9Ao
 ```
-*(wait 3–4 sec for confirmation)*
+*(wait 4 sec for confirmation)*
 
-"CRITICAL. Timelock was 86,400 seconds — one day.
-Now zero. The DAO has no buffer left.
-The alert includes a direct Solscan transaction link and the exact values that changed."
+"CRITICAL. Timelock gone. No buffer left for the DAO."
 
 ---
 
-### [0:58–1:18] — Detector 2: MultisigWeakeningDetector
+### [1:15–1:30] — Detector 2: Multisig Weakening
 
-"Step two: weaken the multisig threshold.
-
-A 3-of-5 multisig means three signers must approve any transaction.
-The attacker reduced it to 1-of-5 — they only need themselves to sign anything.
-That's the moment the treasury became a single point of failure.
-
-MultisigWeakeningDetector catches any threshold reduction."
+"Next: weaken the multisig. Change the rule from 'three people must approve' to 'one person must approve'. The treasury is now under single-signer control."
 
 *(Type and Enter:)*
 ```
 npm run smoke:weaken -- Cn7XXry3SWbeqkBsH7uWXLViz4ffUqzyb3fi5Dkfr9Ao
 ```
-*(wait)*
+*(wait 4 sec)*
 
-"HIGH. 3-of-5 → 1-of-5. One person now controls the entire treasury.
-If you received this alert, you'd have hours to rotate signers
-before the attacker moves to the next step."
+"HIGH. Three-of-five dropped to one-of-five. The attacker can now approve any transaction alone."
 
 ---
 
-### [1:18–1:38] — Detector 3: PrivilegedNonceDetector
+### [1:30–1:45] — Detector 3: Privileged Nonce
 
-"Step three — and this is the clever part of the Drift attack:
-the attacker creates a durable nonce account under their own key.
-
-A durable nonce lets you pre-sign a transaction that stays valid
-indefinitely — it executes whenever the attacker decides, not when the DAO is ready.
-This is the moment the drain was actually *armed*.
-
-PrivilegedNonceDetector fires when a watched nonce account is initialized
-under an attacker-controlled authority."
+"Third: create a durable nonce under an attacker-controlled key. This lets you pre-sign a transaction that stays valid forever — and execute it whenever you want. This is the moment the drain was armed."
 
 *(Type and Enter:)*
 ```
 npm run smoke:nonce-init
 ```
-*(wait)*
+*(wait 4 sec)*
 
-"CRITICAL. Nonce initialized. A pre-signed drain transaction is now live
-and waiting — it can execute at any moment.
-On mainnet Drift, this happened nine days before the actual drain."
+"CRITICAL. Pre-signed drain transaction is now live and waiting."
 
 ---
 
-### [1:38–1:55] — Detector 5: SignerSetChangeDetector
+### [1:45–1:58] — Detector 5: Signer Rotation
 
-"The fifth detector covers an adjacent attack vector —
-not the Drift chain specifically, but one that's hit other Solana protocols.
-
-An attacker with config authority rewrites the members list:
-evicts a legitimate co-signer, adds their own key.
-The threshold stays the same on paper, but the quorum is now compromised.
-
-SignerSetChangeDetector fires on any members vector mutation."
+"And one more — not from the Drift attack specifically, but from similar exploits: the attacker silently swaps out a legitimate co-signer for their own key. The threshold looks the same. The quorum is not."
 
 *(Type and Enter:)*
 ```
 npm run smoke:rotate-signers -- Cn7XXry3SWbeqkBsH7uWXLViz4ffUqzyb3fi5Dkfr9Ao
 ```
-*(wait)*
+*(wait 4 sec)*
 
-"HIGH. Legitimate signer removed, attacker key added.
-Same baseline-diff machinery — one extra detector covering a second attack shape for free."
-
----
-
-### [1:55–2:08] — Discord: all four alerts
-
-*(Switch to Discord, full screen or maximized)*
-
-"Every one of those four alerts landed in Discord simultaneously —
-severity color-coded, Solscan link, exact values before and after.
-
-The fan-out is parallel: Discord, Slack, Telegram, and stdout all fire at once.
-One failing webhook never blocks the others.
-A team watching this channel would have had actionable alerts
-for every step of the Drift chain."
-
-*(Scroll through all 4 embeds — 3–4 sec)*
+"HIGH. Legitimate signer evicted, attacker key added."
 
 ---
 
-### [2:08–2:18] — Detector 4: StaleNonceExecutionDetector (tests)
+### [1:58–2:14] — Discord — full screen
+
+*(Switch to Discord, maximized)*
+
+"This is what the DAO team would see in Discord.
+
+Not a log file — a clear alert with severity level, exactly what changed, and a direct link to the transaction on Solscan.
+
+If Drift had this running on March 23rd, that first CRITICAL alert would have landed nine days before the drain.
+
+Discord, Slack, and terminal all fire simultaneously. One failing webhook never blocks the others."
+
+*(Slowly scroll through 4 embeds — 4 sec)*
+
+---
+
+### [2:14–2:22] — Detector 4: Stale Nonce Execution (tests)
 
 *(Switch back to right terminal)*
 
-"The fourth Drift-chain detector — StaleNonceExecutionDetector —
-catches the drain itself: when a pre-signed transaction finally executes
-from a nonce that was seeded more than an hour ago.
-
-Can't trigger that live without waiting an hour.
-But twelve unit tests cover the exact Drift pattern."
+"The fourth Drift-chain detector catches the drain itself — when the pre-signed transaction executes from a stale nonce. Twelve unit tests cover the exact Drift pattern, all green."
 
 *(Type and Enter:)*
 ```
@@ -199,45 +166,39 @@ npm test src/detectors/stale-nonce-execution
 ```
 *(wait for "12 passing")*
 
-"All green. That's the final step — the moment $285M left the protocol."
+---
+
+### [2:22–2:45] — How to set this up
+
+*(Switch to browser — "Self-host in 5 minutes" section)*
+
+"How does a DAO actually set this up?
+
+Step one: open app.squads.so — your multisig address, the PDA, is visible right there. Copy it.
+
+Step two: paste it into one line in the config: CUSTOS_WATCH equals your PDA.
+
+Step three: add a Discord or Slack webhook URL. Run npm run dev.
+
+That's it. From that moment, any config change on your multisig — threshold, signers, timelock, nonce — fires an alert to your team within a second.
+
+Free Helius RPC. MIT licensed. No paid tiers. No vendor lock-in."
 
 ---
 
-### [2:18–2:40] — How to actually use this
-
-*(Switch to browser — "Self-host in 5 minutes" section on dashboard)*
-
-"How does a DAO actually use this?
-
-You have a Squads multisig. The PDA is visible in app.squads.so —
-it's just an address, like a wallet address.
-You put that address in one environment variable: CUSTOS_WATCH.
-Add a Discord, Slack, or Telegram webhook. Run npm run dev, or the Docker one-liner.
-
-From that moment, any config change on your multisig —
-threshold, signers, timelock, nonce — fires an immediate alert
-in your team's Discord, Slack, or Telegram. You don't need to check anything manually.
-If something changes, you hear about it within a second."
-
-*(Show the code block: git clone → npm install → cp .env.example .env → npm run dev)*
-
-"Five minutes. Free Helius RPC, no credit card. MIT licensed, no paid tiers."
-
----
-
-### [2:40–2:55] — Close
+### [2:45–3:00] — Close
 
 *(Scroll to footer — GitHub URL visible)*
 
-"Solana Foundation's STRIDE program monitors protocols with ten million
-in TVL or above. That covers maybe fifty protocols.
-The other ten thousand multisigs and DAOs on Solana have nothing.
+"Solana Foundation's STRIDE program covers protocols above ten million in TVL — about fifty protocols.
+
+The other ten thousand DAO treasuries, grant multisigs, and community funds on Solana have nothing.
 
 Custos Nox is for them.
 
 github.com/cryptoyasenka/custos-nox"
 
-*(Hold on GitHub URL 2 sec. End.)*
+*(Hold on GitHub URL 3 sec. End.)*
 
 ---
 
@@ -245,52 +206,67 @@ github.com/cryptoyasenka/custos-nox"
 
 | Section | ~Sec | On screen |
 |---------|------|-----------|
-| Opening + Drift timeline | 0:22 | Browser |
-| Architecture + attack framing | 0:16 | Terminals |
-| Detector 1: timelock | 0:23 | Terminal |
-| Detector 2: weakening | 0:20 | Terminal |
-| Detector 3: nonce | 0:20 | Terminal |
-| Detector 5: signer rotation | 0:17 | Terminal |
-| Discord — 4 embeds | 0:08 | Discord |
-| Detector 4: stale nonce tests | 0:10 | Terminal |
-| How to use this | 0:22 | Browser |
-| Close | 0:12 | Browser |
-| **Total** | **~2:50** | |
+| 0:00–0:30 What's a DAO treasury | 0:30 | Browser hero + Drift Timeline |
+| 0:30–0:45 The detectors on the site | 0:15 | Browser detector cards |
+| 0:45–0:58 Switch to terminals | 0:13 | Two-terminal layout |
+| 0:58–1:15 Detector 1 Timelock | 0:17 | Terminal |
+| 1:15–1:30 Detector 2 Weakening | 0:15 | Terminal |
+| 1:30–1:45 Detector 3 Nonce | 0:15 | Terminal |
+| 1:45–1:58 Detector 5 Signer Rotation | 0:13 | Terminal |
+| 1:58–2:14 Discord — 4 embeds | 0:16 | Discord |
+| 2:14–2:22 Detector 4 stale-nonce tests | 0:08 | Terminal |
+| 2:22–2:45 Setup walkthrough | 0:23 | Browser |
+| 2:45–3:00 Close | 0:15 | Browser |
+| **Total** | **~3:00** | |
 
-80% of screen time = live product (terminal + Discord). 20% = website.
+75% live product (browser + terminal + Discord). 25% explanation (the first 30s + setup walkthrough).
+
+---
+
+## COMMANDS — copy to a notepad before recording
+
+```
+npm run smoke:timelock -- Cn7XXry3SWbeqkBsH7uWXLViz4ffUqzyb3fi5Dkfr9Ao
+npm run smoke:weaken -- Cn7XXry3SWbeqkBsH7uWXLViz4ffUqzyb3fi5Dkfr9Ao
+npm run smoke:nonce-init
+npm run smoke:rotate-signers -- Cn7XXry3SWbeqkBsH7uWXLViz4ffUqzyb3fi5Dkfr9Ao
+npm test src/detectors/stale-nonce-execution
+```
 
 ---
 
 ## KEY SENTENCES TO MEMORIZE
 
-These are the lines that make the pitch land — practice them until natural:
+These are the lines that make the demo land — practice them until natural:
 
-1. **"Every step was visible on-chain. None of it was flagged."** — opens the problem
-2. **"The timelock is what gives a DAO time to react."** — explains why detector 1 matters
-3. **"This is the moment the drain was actually armed."** — on nonce-init
-4. **"A team watching this channel would have had actionable alerts for every step."** — on Discord section
-5. **"You put that address in one environment variable."** — integration simplicity
-6. **"The other ten thousand multisigs and DAOs on Solana have nothing."** — closes with impact
+1. **"A multisig works like a company bank account that requires multiple signatures."** — opens with an analogy any judge understands
+2. **"Squads is the most popular multisig tool on Solana."** — establishes scale and relevance
+3. **"In April 2026, that cost one protocol $285 million."** — the hook
+4. **"The Drift attack wasn't a sudden hack."** — sets up the 9-day window
+5. **"Custos Nox is that tool."** — the positioning, said quietly and with confidence
+6. **"This is the moment the drain was armed."** — on nonce-init, the most technically sharp moment
+7. **"If Drift had this running on March 23rd, that first CRITICAL alert would have landed nine days before the drain."** — the Discord section's emotional payoff
+8. **"The other ten thousand DAO treasuries on Solana have nothing."** — closes with the gap
 
 ---
 
 ## WHAT JUDGES WILL REMEMBER
 
-- You triggered a real on-chain attack chain, live, on devnet — not a mockup
-- Every detector was explained before it fired — they understood what they were watching
-- They saw Discord alerts landing in real time — distribution story is clear
-- The integration story was concrete: one env var, five minutes, free
-- The closing line quantified the gap: 10,000 unprotected DAOs
+- The first 30 seconds explained DAO/multisig/Squads in one paragraph — even a non-Solana judge can follow from here on
+- They watched a live attack chain trigger four detectors back-to-back on devnet — not a mockup
+- They saw Discord alerts landing in real time with severity and Solscan links — the distribution story is concrete
+- The setup story was three steps — copy PDA, set one env var, run npm — friction is zero
+- The closing quantified the gap: STRIDE covers fifty, ten thousand have nothing
 
 ---
 
 ## RECORDING TIPS
 
-- One smooth take, natural pace. Don't rush between detectors.
-- Pause 3–4 sec after each alert so the terminal output is readable
-- Don't edit out tx confirmation waits — they prove the chain is real
-- Switch to Discord in one smooth motion — already maximized
-- For the integration section: scroll the website slowly, read the code block out loud
+- One smooth take, natural pace. The first 30 seconds are calm and explanatory — don't rush to the terminal yet.
+- Pause 4 sec after each smoke command so the alert text lands and is readable
+- Don't edit out tx confirmation waits — they prove the chain is real, not a mockup
+- Switch to Discord in one smooth motion (already maximized in another tab)
+- For the setup section: scroll the website slowly, read the three steps clearly
 - Upload to **Loom** (required by Superteam UA guide for tech demo). Also upload YouTube Unlisted as backup.
 - Title: `Custos Nox — F3 Tech Demo (Solana Frontier 2026)`
 - In **Arena A11**: paste YouTube URL. For **Superteam Earn** Ukrainian track submission: paste Loom URL.
