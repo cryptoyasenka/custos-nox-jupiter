@@ -1,6 +1,6 @@
 # CURRENT — custos (Custos Nox)
 
-**Last touched:** 2026-05-09 ~01:15 — DASHBOARD LIVE on `custos-nox.up.railway.app`, daemon moved to `custos-daemon.up.railway.app`
+**Last touched:** 2026-05-09 ~02:35 — NIGHT AUDIT done (`.planning/AUDIT-NIGHT-2026-05-09.md`). 🔴 CRITICAL: Helius API key утёк в public git (`planning/F3-RECORDING-OPTIONS.md` line 60, commit deb510d). Yana утром: reroll Helius ключ + Railway env update + sanitize file. Подробности в AUDIT-NIGHT.
 **Status:** F2/F3 content-ready + URL swap complete. Two Railway services live in same project:
 - **Dashboard (visit card for judges):** `https://custos-nox.up.railway.app` → Next.js 16 standalone, polls daemon, shows hero + install + 5 detectors + #live monitor
 - **Daemon (API):** `https://custos-daemon.up.railway.app/health` → `{ok:true, watching:12, ...}`, Helius mainnet RPC, HTTP sink serving `/health` + `/events`
