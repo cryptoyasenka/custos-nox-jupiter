@@ -9,7 +9,7 @@
 - ✅ Daemon URL правильно зашит в dashboard JS bundle, CSP корректный
 - ✅ Secret sweep чистый кроме известного Helius leak'а
 - ✅ Audit file санитайзнут от inline ключа (commit 0cc1b82)
-- 🟡 Замечен 1 daemon restart blip (uptime 398→51s) — Yana проверить `curl /health` дважды перед F3 recording. Если 2 рестарта подряд — local daemon (F3-RECORDING-OPTIONS.md вариант B).
+- 🔴 **Daemon SIGTERM cycle** — 3+ рестарта за 30 мин (Railway-side termination, не crash). Yana **обязательно** Option B (local daemon) для F3 recording. Live URL для judges работает, но возможны 30-60s dips. Детали в AUDIT-NIGHT секция БЕЗОПАСНОСТЬ.
 **Status:** F2/F3 content-ready + URL swap complete. Two Railway services live in same project:
 - **Dashboard (visit card for judges):** `https://custos-nox.up.railway.app` → Next.js 16 standalone, polls daemon, shows hero + install + 5 detectors + #live monitor
 - **Daemon (API):** `https://custos-daemon.up.railway.app/health` → `{ok:true, watching:12, ...}`, Helius mainnet RPC, HTTP sink serving `/health` + `/events`

@@ -208,7 +208,23 @@ Drafts уже есть:
 - 🟢 Dashboard CSP настроен (connect-src custos-daemon)
 - 🟡 Daemon uptime ~11 мин на момент аудита. Restart policy `ON_FAILURE` со max-retries 5. Если упадёт навсегда — Railway шлёт email Yana
 - 🟡 Helius free tier — 1M req/мес. На 12 WS subscriptions хватает с запасом, НО при leak'е чужие могут сжечь. После reroll — мониторинг lim'а через dashboard.helius.dev
-- 🟡 **Замечен 1 неожиданный restart daemon во время night audit ~02:38** (uptime 398s → 51s между двумя curl'ами без видимой причины). Возможные источники: Railway auto-redeploy при git push в main (commit `6fb6f22` ушёл туда в это время), или container crash + auto-restart внутри того же deployment. После этого uptime монотонно растёт. **Действие для Yana утром:** перед F3 recording проверить `curl https://custos-daemon.up.railway.app/health` дважды с интервалом 30с — uptime должен расти. Если 2 рестарта подряд — предсказуемый risk, лучше записать F3 быстро или временно поднять daemon локально (см. F3-RECORDING-OPTIONS.md вариант B)
+- 🔴 **Daemon SIGTERM cycle подтверждён — 3+ рестарта за 30 минут.** Логи показывают `received SIGTERM, shutting down` → `Stopping Container` → `Starting Container` без ошибок в коде daemon'а. Это **Railway-side termination**, не crash. Возможные причины: container recycling, healthcheck timeout, soft resource limit (graceful SIGTERM, не OOM). Tail of logs:
+  ```
+  [custos] http endpoint listening on :8080
+  [custos] received SIGTERM, shutting down
+  Stopping Container
+  Starting Container
+  ```
+  **Sequence наблюдений (uptime в секундах при curl /health):**
+  - 02:38 → 398s
+  - ~03:00 → 51s (рестарт)
+  - ~03:00 → 143→204s (стабильно растёт)
+  - ~03:05 → 17s (ещё рестарт)
+
+  **Action для Yana утром (КРИТИЧНО):**
+  1. **F3 recording:** Использовать **Option B (fully local daemon)** из `planning/F3-RECORDING-OPTIONS.md`. На Railway daemon dip mid-recording = 30-60 сек "daemon offline" в кадре = пересъём.
+  2. **Judging window 24h:** живой URL OK на 95%+ времени, но зрители могут попасть на dip. Если время позволит — дебаг daemon'а до submit (deeper dive нужен в `src/daemon.ts` heartbeat / WS keepalive). **НЕ блокирующее** для submit.
+  3. **Не диагностил глубже** — это потребовало бы менять код, что Yana запретила. Утром, если решит — могу копнуть `src/supervisor.ts` и Helius WS reconnect logic.
 
 ---
 
