@@ -2,6 +2,8 @@
 
 **Status:** SOURCE OF TRUTH for F2 + F3 + project rework. If a future session reads this and CURRENT.md, it must NOT roll back to the old "75% terminal demo" plan or claim F2 mp3 are "ready" — they are deprecated, scheduled for full re-record.
 
+> ⚠ **WATCHLIST UPDATE (2026-05-08 later that day):** This analysis names "Drift Security Council, Jito DAO, MarginFi" as initial watchlist candidates (lines ~100, 113, 122-124). After research → **`.planning/MAINNET-WATCHLIST.md`** is the canonical 12-DAO watchlist (Mango/Marinade/Pyth/Solend/Jupiter/Raydium/Orca/Bonk + Helius/Squads/Superteam/MonkeDAO). Drift Security Council intentionally NOT in feed (Squads v4 PDA not in any indexable registry — see MAINNET-WATCHLIST.md "Drift Security Council — separate research note", Decision: Option A). Jito DAO and MarginFi did not make the final list. F2 deck and F3 script (`planning/TECH-DEMO-SCRIPT-F3.md` line 66) reference the canonical 12 — do not pitch from this analysis file directly.
+
 **Sources verified this session:**
 - https://ua.superteam.fun/guide/docs/submission/pitch-video (WebFetch)
 - https://ua.superteam.fun/guide/docs/submission/tech-demo (WebFetch)
