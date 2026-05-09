@@ -121,10 +121,10 @@ export function LiveFeed() {
                   Demo
                 </span>
                 <p className="text-xs leading-relaxed text-muted-strong">
-                  No mainnet events yet — these 5 rows are devnet samples showing what the
-                  feed looks like under attack. Daemon is watching{" "}
-                  <span className="text-foreground">{WATCHLIST.length} mainnet DAOs</span>{" "}
-                  live; quiet feed is the expected steady state.
+                  No mainnet events yet — these 5 rows are devnet samples showing what the feed
+                  looks like under attack. Daemon is watching{" "}
+                  <span className="text-foreground">{WATCHLIST.length} mainnet DAOs</span> live;
+                  quiet feed is the expected steady state.
                 </p>
               </div>
             </div>

@@ -21,8 +21,7 @@ export function LiveStatusBar() {
       <span>MONITORING 2 accounts</span>
       <span className="text-muted">·</span>
       <span>
-        Last heartbeat:{" "}
-        <span className="text-accent">{seconds}s ago</span>
+        Last heartbeat: <span className="text-accent">{seconds}s ago</span>
       </span>
     </div>
   );

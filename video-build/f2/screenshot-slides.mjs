@@ -1,21 +1,21 @@
-import { chromium } from 'playwright-chromium';
-import { fileURLToPath } from 'url';
-import path from 'path';
-import fs from 'fs';
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { chromium } from "playwright-chromium";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DECK_PATH = path.resolve(__dirname, '../../assets/pitch-slides/deck-v2.html');
-const OUT_DIR = path.resolve(__dirname, 'slides-screenshots');
+const DECK_PATH = path.resolve(__dirname, "../../assets/pitch-slides/deck-v2.html");
+const OUT_DIR = path.resolve(__dirname, "slides-screenshots");
 
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 
-const browser = await chromium.launch({ args: ['--no-sandbox'] });
+const browser = await chromium.launch({ args: ["--no-sandbox"] });
 const ctx = await browser.newContext({
-  viewport: { width: 1920, height: 1080 }
+  viewport: { width: 1920, height: 1080 },
 });
 const page = await ctx.newPage();
-await page.goto(`file:///${DECK_PATH.replace(/\\/g, '/')}`);
-await page.addStyleTag({ content: '.hud { display: none !important; }' });
+await page.goto(`file:///${DECK_PATH.replace(/\\/g, "/")}`);
+await page.addStyleTag({ content: ".hud { display: none !important; }" });
 await page.waitForTimeout(400);
 
 for (let idx = 0; idx < 8; idx++) {
@@ -23,19 +23,19 @@ for (let idx = 0; idx < 8; idx++) {
 
   if (idx > 0) {
     await page.evaluate((targetIdx) => {
-      const all = document.querySelectorAll('.slide');
-      all.forEach(s => {
-        s.style.transition = 'none';
-        s.classList.remove('active');
-        s.style.display = 'none';
-        s.style.opacity = '0';
-      });
+      const all = document.querySelectorAll(".slide");
+      for (const s of all) {
+        s.style.transition = "none";
+        s.classList.remove("active");
+        s.style.display = "none";
+        s.style.opacity = "0";
+      }
       const target = all[targetIdx];
-      target.style.display = 'flex';
+      target.style.display = "flex";
       target.getBoundingClientRect();
-      target.classList.add('active');
-      target.style.opacity = '1';
-      if (typeof onSlideEnter === 'function') onSlideEnter(targetIdx);
+      target.classList.add("active");
+      target.style.opacity = "1";
+      if (typeof onSlideEnter === "function") onSlideEnter(targetIdx);
     }, idx);
   }
 

@@ -1,33 +1,33 @@
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 /**
  * record-html.mjs — записывает hook.html и outro.html через Playwright
  * Запуск: node record-html.mjs
  * Результат: hook.webm (33s) + outro.webm (10s) в папке video-build/f2/
  */
-import { chromium } from 'playwright-chromium';
-import { fileURLToPath } from 'url';
-import path from 'path';
-import fs from 'fs';
+import { chromium } from "playwright-chromium";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function recordHtml(htmlFile, outputFile, durationMs, doneTitle) {
-  console.log(`\n▶ Recording ${htmlFile} → ${outputFile} (${durationMs/1000}s)...`);
+  console.log(`\n▶ Recording ${htmlFile} → ${outputFile} (${durationMs / 1000}s)...`);
 
   const browser = await chromium.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
 
   const context = await browser.newContext({
     viewport: { width: 1920, height: 1080 },
     recordVideo: {
       dir: __dirname,
-      size: { width: 1920, height: 1080 }
-    }
+      size: { width: 1920, height: 1080 },
+    },
   });
 
   const page = await context.newPage();
   const filePath = path.resolve(__dirname, htmlFile);
-  await page.goto(`file:///${filePath.replace(/\\/g, '/')}`);
+  await page.goto(`file:///${filePath.replace(/\\/g, "/")}`);
 
   // Wait for animation to signal completion OR for durationMs — whichever comes first
   const deadline = Date.now() + durationMs + 2000;
@@ -55,8 +55,8 @@ async function recordHtml(htmlFile, outputFile, durationMs, doneTitle) {
 }
 
 (async () => {
-  await recordHtml('hook.html',     'hook.webm',     34000, 'ANIMATION_DONE');
-  await recordHtml('outro.html',    'outro.webm',    20000, 'OUTRO_DONE');
-  await recordHtml('howworks.html', 'howworks.webm',  8000, 'HOWWORKS_DONE');
-  console.log('\n✓ All recordings done.');
+  await recordHtml("hook.html", "hook.webm", 34000, "ANIMATION_DONE");
+  await recordHtml("outro.html", "outro.webm", 20000, "OUTRO_DONE");
+  await recordHtml("howworks.html", "howworks.webm", 8000, "HOWWORKS_DONE");
+  console.log("\n✓ All recordings done.");
 })();

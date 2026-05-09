@@ -1,10 +1,10 @@
-import { chromium } from 'playwright-chromium';
-import { fileURLToPath } from 'url';
-import path from 'path';
-import fs from 'fs';
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { chromium } from "playwright-chromium";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DECK_PATH = path.resolve(__dirname, '../../assets/pitch-slides/deck-v2.html');
+const DECK_PATH = path.resolve(__dirname, "../../assets/pitch-slides/deck-v2.html");
 
 const SLIDE_DURATIONS_MS = [
   21000, // s1: intro line + $285M count-up + Drift hook ~21s
@@ -20,17 +20,17 @@ const SLIDE_DURATIONS_MS = [
 // Total = 132 sec silent video (~2:12), v3 — 9 slides incl. team slide
 
 if (!fs.existsSync(DECK_PATH)) {
-  console.error('✗ deck not found at', DECK_PATH);
+  console.error("✗ deck not found at", DECK_PATH);
   process.exit(1);
 }
 
-const browser = await chromium.launch({ args: ['--no-sandbox'] });
+const browser = await chromium.launch({ args: ["--no-sandbox"] });
 const ctx = await browser.newContext({
   viewport: { width: 1920, height: 1080 },
-  recordVideo: { dir: __dirname, size: { width: 1920, height: 1080 } }
+  recordVideo: { dir: __dirname, size: { width: 1920, height: 1080 } },
 });
 const page = await ctx.newPage();
-await page.goto(`file:///${DECK_PATH.replace(/\\/g, '/')}`);
+await page.goto(`file:///${DECK_PATH.replace(/\\/g, "/")}`);
 
 await page.waitForTimeout(500);
 
@@ -38,7 +38,7 @@ for (let i = 0; i < SLIDE_DURATIONS_MS.length; i++) {
   console.log(`slide ${i + 1}/${SLIDE_DURATIONS_MS.length} — holding ${SLIDE_DURATIONS_MS[i]}ms`);
   await page.waitForTimeout(SLIDE_DURATIONS_MS[i]);
   if (i < SLIDE_DURATIONS_MS.length - 1) {
-    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press("ArrowRight");
   }
 }
 await page.waitForTimeout(1000);
@@ -48,12 +48,12 @@ await ctx.close();
 await browser.close();
 
 if (vp && fs.existsSync(vp)) {
-  const out = path.resolve(__dirname, 'slides.webm');
+  const out = path.resolve(__dirname, "slides.webm");
   fs.renameSync(vp, out);
   const totalSec = SLIDE_DURATIONS_MS.reduce((a, b) => a + b, 0) / 1000;
   console.log(`✓ slides.webm saved (~${totalSec}s, ${SLIDE_DURATIONS_MS.length} slides, silent)`);
   console.log(`  path: ${out}`);
 } else {
-  console.error('✗ no video found');
+  console.error("✗ no video found");
   process.exit(1);
 }

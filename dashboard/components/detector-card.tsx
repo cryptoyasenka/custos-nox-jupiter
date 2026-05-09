@@ -17,9 +17,7 @@ export function DetectorCard({ detector }: { detector: DetectorMeta }) {
           <div className="mb-1.5 flex items-center gap-2">
             <span
               className={`inline-flex items-center rounded px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider ${
-                isAdjacent
-                  ? "bg-surface-elevated text-muted"
-                  : "bg-accent/10 text-accent"
+                isAdjacent ? "bg-surface-elevated text-muted" : "bg-accent/10 text-accent"
               }`}
             >
               {detector.chainLabel}
