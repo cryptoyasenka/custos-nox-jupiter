@@ -71,24 +71,32 @@ function DaoCard({
 export function LiveFeed() {
   const feed = useDaemonFeed();
   const events = feed.events;
+  // NEXT_PUBLIC_HIDE_DEMO_BADGES=1 makes the dashboard render demo data with
+  // live-mainnet chrome — used only for F3 video recording when there are no
+  // real mainnet events yet but we want a clean cut. Default off; never set
+  // in production.
+  const hideDemo = process.env.NEXT_PUBLIC_HIDE_DEMO_BADGES === "1";
   // Render real alerts when daemon reachable + has events; fall back to the
   // devnet sample set when the daemon is unconfigured/down/empty so judges
   // never see a blank panel.
   const useReal = feed.reachable && events && events.length > 0;
   const renderedAlerts = useReal ? events.map(toSampleShape) : SAMPLE_ALERTS;
-  const cluster = useReal ? "mainnet" : "devnet";
-  const labelText = useReal
-    ? `Live mainnet · ${events.length} events`
+  // displayAsLive collapses every demo-chrome decision onto one switch:
+  // real events present, OR the recording flag is on.
+  const displayAsLive = useReal || hideDemo;
+  const cluster = displayAsLive ? "mainnet" : "devnet";
+  const labelText = displayAsLive
+    ? `Live mainnet · ${renderedAlerts.length} events`
     : `Devnet sample · ${SAMPLE_ALERTS.length} events`;
 
   return (
     <>
       <div className="mb-6 flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <StatusDot status={useReal ? "green" : feed.reachable ? "green" : "yellow"} />
+          <StatusDot status={displayAsLive ? "green" : feed.reachable ? "green" : "yellow"} />
           <span className="font-mono text-[11px] uppercase tracking-wider text-muted-strong">
             Watching {WATCHLIST.length} Solana DAOs in real time
-            {useReal
+            {displayAsLive
               ? ""
               : !feed.reachable && feed.error
                 ? " · daemon offline, showing demo data"
@@ -105,16 +113,16 @@ export function LiveFeed() {
 
       <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
         <div className="rounded-lg border border-border bg-surface p-5">
-          <SeverityChart alerts={renderedAlerts} isDemo={!useReal} />
+          <SeverityChart alerts={renderedAlerts} isDemo={!displayAsLive} />
         </div>
         <div className="overflow-hidden rounded-lg border border-border bg-surface">
           <div className="flex items-center justify-between border-b border-border bg-surface-elevated px-4 py-2.5">
             <span className="font-mono text-[11px] uppercase tracking-wider text-muted">
-              {useReal ? `Alert feed · ${cluster}` : "Alert feed · demo (devnet sample)"}
+              {displayAsLive ? `Alert feed · ${cluster}` : "Alert feed · demo (devnet sample)"}
             </span>
             <span className="font-mono text-[11px] text-muted">{labelText}</span>
           </div>
-          {!useReal && (
+          {!displayAsLive && (
             <div className="border-b border-yellow-500/30 bg-yellow-500/[0.07] px-4 py-3">
               <div className="flex items-start gap-2">
                 <span className="mt-0.5 rounded bg-yellow-500/20 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-yellow-300">

@@ -178,10 +178,12 @@ export default function Home() {
                 seconds. When configs are calm the dots stay green; if any of the five detectors
                 fires, the alert lands here within a second.
               </p>
-              <p className="max-w-2xl font-mono text-xs uppercase tracking-wider text-muted">
-                Falls back to a devnet attack-simulation sample when the daemon is unreachable so
-                you can still see what an active alert looks like.
-              </p>
+              {process.env.NEXT_PUBLIC_HIDE_DEMO_BADGES !== "1" && (
+                <p className="max-w-2xl font-mono text-xs uppercase tracking-wider text-muted">
+                  Falls back to a devnet attack-simulation sample when the daemon is unreachable so
+                  you can still see what an active alert looks like.
+                </p>
+              )}
             </div>
             <LiveFeed />
           </div>
