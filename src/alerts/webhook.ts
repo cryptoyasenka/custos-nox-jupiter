@@ -95,6 +95,10 @@ export function buildDiscordPayload(alert: Alert, now: () => Date): unknown {
   const timestamp = now().toISOString();
   return {
     username: "Custos Nox",
+    // Discord parses @everyone/@here/@<id> in `embeds[].title` and `fields[].value`.
+    // Detectors today emit only base58 PDAs, but `parse: []` makes the sink safe
+    // even if a future detector pulls a memo string into the subject.
+    allowed_mentions: { parse: [] },
     embeds: [
       {
         title: `[${alert.severity.toUpperCase()}] ${alert.subject}`,
@@ -219,14 +223,30 @@ export interface TelegramAlertSinkOptions extends RetryOptions {
   onError?: (err: unknown) => void;
 }
 
+// Telegram parse_mode=HTML treats `&`, `<`, `>` as markup. Detectors today
+// only emit base58 PDAs, so escape is defensive — but a future detector that
+// reads memo strings or instruction names would otherwise break the message
+// or smuggle markup. Same shape as MDN's escape; covers all reserved chars
+// for Telegram's HTML subset.
+function escapeTelegramHtml(s: string): string {
+  return s.replace(
+    /[&<>"]/g,
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string,
+  );
+}
+
 export function buildTelegramPayload(alert: Alert): unknown {
   const severity = alert.severity.toUpperCase();
   const linkLine = alert.explorerLink
-    ? `\n<a href="${alert.explorerLink}">🔗 View on Solscan</a>`
+    ? `\n<a href="${escapeTelegramHtml(alert.explorerLink)}">🔗 View on Solscan</a>`
     : "";
+  const subject = escapeTelegramHtml(alert.subject);
+  const detector = escapeTelegramHtml(alert.detector);
+  const cluster = escapeTelegramHtml(alert.cluster);
+  const ctx = escapeTelegramHtml(safeStringify(alert.context));
   return {
     parse_mode: "HTML",
-    text: `<b>[${severity}]</b> ${alert.subject}${linkLine}\n\n<b>Detector:</b> <code>${alert.detector}</code>\n<b>Cluster:</b> ${alert.cluster}\n\n<pre>${safeStringify(alert.context)}</pre>`,
+    text: `<b>[${severity}]</b> ${subject}${linkLine}\n\n<b>Detector:</b> <code>${detector}</code>\n<b>Cluster:</b> ${cluster}\n\n<pre>${ctx}</pre>`,
   };
 }
 

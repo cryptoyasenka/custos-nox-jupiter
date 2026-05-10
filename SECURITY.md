@@ -80,3 +80,26 @@ CI runs `npm audit --omit=dev --audit-level=high`, which fails on `high` /
 
 Watch [GHSA-w5hq-g745-h8pq](https://github.com/advisories/GHSA-w5hq-g745-h8pq)
 for upstream resolution.
+
+### GHSA-3gc7-fjrx-p6mg — `bigint-buffer` toBigIntLE buffer overflow (dev-only)
+
+Reaches the project via the test-only chain
+`@sqds/multisig` → `@solana/spl-token` → `@solana/buffer-layout-utils` →
+`bigint-buffer`. Four high advisories on `npm audit` with dev deps.
+
+`@sqds/multisig` is in `devDependencies` — used to build governance test
+fixtures, never bundled into the daemon `dist/`. The vulnerable function
+`toBigIntLE` is invoked only on test-controlled inputs.
+
+CI runs `npm audit --omit=dev --audit-level=high`, which is the audit chain
+that actually reflects what ships to operators. That run is clean.
+
+The `npm audit fix --force` resolution downgrades `@sqds/multisig` from
+`2.x` to `1.3.1`, which loses governance helpers our fixtures rely on.
+
+### GHSA-67mh-4wv8-2f99 — `esbuild` dev server CORS (dev-only)
+
+Reaches via `vitest` → `vite` → `esbuild`. Six moderate advisories on
+`npm audit` with dev deps. Only affects the dev server (`vitest --watch`),
+not test runs nor anything we ship. Same rationale: prod-only audit is clean,
+upgrade to `vitest@4` is a breaking config change we will pick up post-submit.
