@@ -36,13 +36,14 @@ if (useFresh) {
 }
 
 const SLIDE_DURATIONS_MS = [
-  16000, // s1 — incident + product reveal + 9-days punch
+   8000, // s0 — title cold-open (logo + tagline + bullets)
+  11000, // s1 — Drift hook ($285M + 9-days punch) [tightened from 16s now that s0 carries the tagline]
   16000, // s2 — Drift attack chain timeline
   14000, // s3 — STRIDE vs 10,000+ gap
-  14000, // s4 — 5 detector cards (now with daemon type label)
+  14000, // s4 — 5 detector cards
   14000, // s5 — 4 proof cards (200+/<1s/MIT/Discord mockup)
   14000, // s6 — setup in 5 min
-  13000, // s7 — vision (now with Public Good badge)
+  13000, // s7 — vision (Public Good badge)
   12000, // s8 — Team (Yasya + OpenGradient models)
   10000, // s9 — CTA + final
 ];

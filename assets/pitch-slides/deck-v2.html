@@ -114,6 +114,53 @@
   }
 
   /* ═══════════════════════════════════════════
+     SLIDE 0 — TITLE / COLD OPEN
+  ═══════════════════════════════════════════ */
+  .s0-body {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0;
+    text-align: center;
+  }
+  .s0-logo {
+    width: 220px; height: 220px;
+    filter: drop-shadow(0 0 48px rgba(74,222,128,0.28));
+    margin-bottom: 36px;
+    animation: s0-rise 700ms ease-out both;
+  }
+  .s0-wordmark {
+    font-size: 132px; font-weight: 800; letter-spacing: 0.16em;
+    color: var(--fg); text-transform: uppercase;
+    margin-bottom: 52px; line-height: 1;
+    animation: s0-rise 700ms ease-out 180ms both;
+  }
+  .s0-divider {
+    width: 0; height: 4px; background: var(--green);
+    border-radius: 2px; margin-bottom: 52px;
+    animation: s0-grow 520ms ease-out 520ms forwards;
+  }
+  .s0-tagline {
+    font-size: 60px; font-weight: 600; line-height: 1.2;
+    color: var(--fg); letter-spacing: 0.005em;
+    margin-bottom: 60px; max-width: 1520px;
+    animation: s0-rise 700ms ease-out 720ms both;
+  }
+  .s0-bullets {
+    display: flex; align-items: center; justify-content: center;
+    gap: 22px; font-size: 30px; font-weight: 500;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    animation: s0-rise 700ms ease-out 1080ms both;
+  }
+  .s0-bullets .dot { color: var(--green); font-weight: 700; }
+  @keyframes s0-rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes s0-grow {
+    from { width: 0; opacity: 0.4; }
+    to   { width: 112px; opacity: 1; }
+  }
+
+  /* ═══════════════════════════════════════════
      SLIDE 1 — INCIDENT
   ═══════════════════════════════════════════ */
   .s1-body {
@@ -679,9 +726,32 @@
   </svg>
 
   <!-- ══════════════════════════════════════
+       SLIDE 0 — TITLE / COLD OPEN
+  ══════════════════════════════════════ -->
+  <div class="slide active" id="s0">
+    <div class="s0-body">
+      <svg class="s0-logo" viewBox="0 0 1024 1024"><use href="#logo"/></svg>
+      <div class="s0-wordmark">CUSTOS NOX</div>
+      <div class="s0-divider"></div>
+      <div class="s0-tagline">Real-time security monitor<br/>for Solana DAO multisigs</div>
+      <div class="s0-bullets">
+        <span>open-source</span>
+        <span class="dot">·</span>
+        <span>sub-second alerts</span>
+        <span class="dot">·</span>
+        <span>MIT licensed</span>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Built solo by Yasya · Superteam Ukraine</span>
+      <span>Frontier 2026</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
        SLIDE 1 — THE INCIDENT
   ══════════════════════════════════════ -->
-  <div class="slide active" id="s1">
+  <div class="slide" id="s1">
     <div class="slide-header">
       <div class="brand">
         <svg viewBox="0 0 1024 1024"><use href="#logo"/></svg>
@@ -691,7 +761,6 @@
     </div>
 
     <div class="s1-body">
-      <div class="s1-intro">Custos Nox is a real-time security monitor for Solana DAO multisigs &mdash; open-source, sub-second alerts, MIT licensed.</div>
       <div class="s1-label">Drift Protocol · April 1, 2026</div>
       <div class="s1-amount" id="s1-amount">$285M</div>
       <div class="s1-sub">drained in 12 minutes</div>
@@ -1168,11 +1237,12 @@ function countUpRaw(el, target, ms, finalText) {
 }
 
 /* ── Per-slide entrance animations ── */
+/* idx 0 is s0 (title/cold-open) — CSS keyframes handle its reveal, no JS hook. */
 function onSlideEnter(idx) {
-  if (idx === 0) {
+  if (idx === 1) {
     countUp(document.getElementById('s1-amount'), 285, 1500);
   }
-  if (idx === 1) {
+  if (idx === 2) {
     const steps = document.querySelectorAll('#s2 .tl-step');
     steps.forEach((el, i) => {
       el.style.opacity = '0';
@@ -1184,17 +1254,17 @@ function onSlideEnter(idx) {
       }, i * 240 + 100);
     });
   }
-  if (idx === 2) {
+  if (idx === 3) {
     countUpRaw(document.getElementById('s3-large'), 10000, 1800, '10,000+');
   }
-  if (idx === 3) {
+  if (idx === 4) {
     document.querySelectorAll('#s4 .detector-card').forEach((el, i) => {
       el.style.opacity = '0'; el.style.transform = 'translateY(12px)';
       el.style.transition = 'opacity 340ms ease-out, transform 340ms ease-out';
       setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, i * 150 + 60);
     });
   }
-  if (idx === 4) {
+  if (idx === 5) {
     countUpRaw(document.getElementById('s6-tests'), 200, 1200, '200+');
     document.querySelectorAll('#s6 .proof-card').forEach((el, i) => {
       el.style.opacity = '0'; el.style.transform = 'translateY(12px)';
@@ -1202,14 +1272,14 @@ function onSlideEnter(idx) {
       setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, i * 180 + 60);
     });
   }
-  if (idx === 5) {
+  if (idx === 6) {
     document.querySelectorAll('#s7 .step-card').forEach((el, i) => {
       el.style.opacity = '0'; el.style.transform = 'translateY(12px)';
       el.style.transition = 'opacity 340ms ease-out, transform 340ms ease-out';
       setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, i * 200 + 80);
     });
   }
-  if (idx === 6) {
+  if (idx === 7) {
     document.querySelectorAll('#s9 .vision-row').forEach((el, i) => {
       el.style.opacity = '0'; el.style.transform = 'translateY(14px)';
       el.style.transition = 'opacity 360ms ease-out, transform 360ms ease-out';
