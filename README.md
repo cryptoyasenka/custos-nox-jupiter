@@ -121,6 +121,49 @@ initial implementation, all on `main`:
 
 Test coverage grew from 147 to 215 across these changes (205 after the hardening pass; 10 added for the Telegram sink).
 
+## Jupiter route-exploit detector
+
+This repo ships a sixth detector tailored to Jupiter Aggregator V6
+(`JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4`) — Solana's dominant DEX
+aggregator and the rail every drainer template that targets compromised
+multisigs ends up using.
+
+**The fingerprint.** A legitimate Jupiter user grants a per-swap SPL Token
+approval bounded by the swap input. A drainer grants `u64::MAX` approval
+to the Jupiter program (or a PDA derived from it) and then calls
+`route()` / `shared_accounts_route()` in the same transaction to sweep
+the whole token balance into something attacker-controlled.
+
+**What `JupiterExploitDetector` does.** Inspects `TransactionEvent`s
+(any data source can feed it — Helius enhanced webhooks, the Dune SIM
+watcher in the sibling sidetrack repo, or RPC `getSignaturesForAddress`
+polling via `npm run watch:jupiter`). Fires CRITICAL when the same
+transaction contains both:
+
+1. A Jupiter V6 instruction, AND
+2. An SPL Token (or Token-2022) `Approve` / `ApproveChecked` whose
+   *owner* is the guarded multisig and whose *amount* is ≥ 2⁶³.
+
+False-positive surface is small: the threshold rules out plausibly
+legitimate large approvals, and the guarded-owner check rules out
+unrelated approvals in the same block.
+
+**Run it.**
+
+```bash
+export CUSTOS_RPC_URL=https://mainnet.helius-rpc.com/?api-key=YOUR_KEY
+export CUSTOS_JUPITER_GUARDED=YOUR_GUARDED_WALLET_PUBKEY
+npm run watch:jupiter
+```
+
+Stdout emits one JSON line per fired alert. Set `CUSTOS_DISCORD_WEBHOOK`
+to also fan out a one-line Discord message per alert. The watcher is
+independent of the main daemon so the production Helius account-change
+path stays untouched — wiring lives in `scripts/run-jupiter.ts`.
+
+Built for the
+[Frontier "Not Your Regular" sidetrack](https://earn.superteam.fun/listing/not-your-regular-bounty).
+
 ## Quick start
 
 See [DEV-ENV-SETUP.md](./DEV-ENV-SETUP.md).
