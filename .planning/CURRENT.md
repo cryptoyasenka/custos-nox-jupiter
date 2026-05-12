@@ -1,7 +1,7 @@
 # CURRENT — custos-nox-jupiter (sidetrack mirror)
 
-**Last touched:** 2026-05-11 17:30 Kyiv
-**Status:** Code complete. Submission BLOCKED — no live Jupiter sidetrack found.
+**Last touched:** 2026-05-12 Kyiv
+**Status:** ARCHIVED. Code complete; no live Jupiter sidetrack materialized; Yana chose archive over merge-into-main. Repo is GitHub-archived (read-only).
 
 ## What this repo is
 
@@ -28,7 +28,4 @@ Mirror repo stands as a portfolio artifact. If a Jupiter "Not Your Regular" boun
 
 ## Next step
 
-None autonomously. Yana decides in the morning whether to:
-1. Wait for sponsor program to surface
-2. Repurpose detector + CLI into the main repo as a 6th detector module
-3. Archive the mirror repo
+None. Decision 2026-05-12: archive. Reason for not merging into main custos: main was already submitted to Frontier 2026-05-10 and is in judging — no submission-side gain from adding a detector mid-judging. If a real Jupiter bounty appears later, unarchive via `gh repo unarchive cryptoyasenka/custos-nox-jupiter` and reactivate.
